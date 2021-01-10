@@ -6,7 +6,7 @@ import pl.karol202.smartwallet.domain.entity.NewExpense
 
 interface ExpenseRepository
 {
-    val allExpenses: Flow<Expense>
+    val allExpenses: Flow<List<Expense>>
 
     suspend fun addExpense(expense: NewExpense)
 

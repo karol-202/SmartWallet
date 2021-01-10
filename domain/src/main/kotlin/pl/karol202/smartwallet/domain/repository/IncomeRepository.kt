@@ -8,7 +8,7 @@ import pl.karol202.smartwallet.domain.entity.NewIncome
 
 interface IncomeRepository
 {
-    val allIncomes: Flow<Income>
+    val allIncomes: Flow<List<Income>>
 
     suspend fun addIncome(income: NewIncome)
 

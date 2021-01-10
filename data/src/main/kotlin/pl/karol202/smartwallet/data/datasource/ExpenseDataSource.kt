@@ -6,7 +6,7 @@ import pl.karol202.smartwallet.data.model.NewExpenseModel
 
 interface ExpenseDataSource
 {
-    val allExpenses: Flow<ExpenseModel>
+    val allExpenses: Flow<List<ExpenseModel>>
 
     suspend fun addExpense(expense: NewExpenseModel)
 
