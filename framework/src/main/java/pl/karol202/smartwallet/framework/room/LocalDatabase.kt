@@ -2,15 +2,17 @@ package pl.karol202.smartwallet.framework.room
 
 import android.content.Context
 import androidx.room.*
-import pl.karol202.smartwallet.framework.room.dao.ExpenseDao
-import pl.karol202.smartwallet.framework.room.dao.IncomeDao
-import pl.karol202.smartwallet.framework.room.entity.ExpenseRoomEntity
-import pl.karol202.smartwallet.framework.room.entity.IncomeRoomEntity
+import pl.karol202.smartwallet.framework.room.converter.TransactionTypeTypeConverter
+import pl.karol202.smartwallet.framework.room.dao.TransactionDao
+import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 private const val DATABASE_NAME = "smartwallet.local"
 private const val DATABASE_VERSION = 1
 
-@Database(entities = [ExpenseRoomEntity::class, IncomeRoomEntity::class], version = DATABASE_VERSION, exportSchema = false)
+@Database(entities = [TransactionRoomEntity::class],
+          version = DATABASE_VERSION,
+          exportSchema = false)
+@TypeConverters(TransactionTypeTypeConverter::class)
 abstract class LocalDatabase : RoomDatabase()
 {
 	companion object
@@ -21,9 +23,7 @@ abstract class LocalDatabase : RoomDatabase()
 				.build()
 	}
 
-	abstract fun expenseDao(): ExpenseDao
-
-	abstract fun incomeDao(): IncomeDao
+	abstract fun transactionDao(): TransactionDao
 }
 
 
