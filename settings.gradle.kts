@@ -23,3 +23,5 @@ pluginManagement {
 include(":domain")
 include(":data")
 include(":framework")
+include(":interactors")
+include(":presentation")
