@@ -35,4 +35,6 @@ dependencies {
 
     implementation(Deps.ANDROID_ROOM_KTX)
     kapt(Deps.ANDROID_ROOM_COMPILER)
+
+    implementation(Deps.KOIN_VIEWMODEL)
 }
