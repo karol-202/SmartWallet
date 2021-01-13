@@ -1,4 +1,4 @@
-package pl.karol202.smartwallet.ui.compose
+package pl.karol202.smartwallet.ui.compose.transactions
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

@@ -9,6 +9,8 @@ object Deps
 	const val ANDROID_COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.ANDROID_COMPOSE}"
 	const val ANDROID_COMPOSE_MATERIAL_ICONS_CORE = "androidx.compose.material:material-icons-core:${Versions.ANDROID_COMPOSE}"
 
+	const val ANDROID_NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.ANDROID_NAVIGATION_COMPOSE}"
+
 	const val ANDROID_ROOM_KTX = "androidx.room:room-ktx:${Versions.ANDROID_ROOM}"
 	const val ANDROID_ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ANDROID_ROOM}"
 

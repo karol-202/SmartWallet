@@ -42,5 +42,7 @@ dependencies {
     implementation(Deps.ANDROID_COMPOSE_MATERIAL)
     implementation(Deps.ANDROID_COMPOSE_MATERIAL_ICONS_CORE)
 
+    implementation(Deps.ANDROID_NAVIGATION_COMPOSE)
+
     implementation(Deps.KOIN_VIEWMODEL)
 }

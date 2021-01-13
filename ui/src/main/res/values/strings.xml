@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Smart Wallet</string>
+
+    <string name="screen_transactions">Transactions</string>
 </resources>

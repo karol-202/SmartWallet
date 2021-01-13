@@ -5,6 +5,7 @@ object Versions
 
 	const val ANDROID_GRADLE_PLUGIN = "7.0.0-alpha04"
 	const val ANDROID_COMPOSE = "1.0.0-alpha08"
+	const val ANDROID_NAVIGATION_COMPOSE = "1.0.0-alpha04"
 	const val ANDROID_ROOM = "2.2.6"
 
 	const val KOIN = "2.2.0"
