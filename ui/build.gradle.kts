@@ -17,6 +17,7 @@ android {
     }
 
     kotlinOptions {
+        freeCompilerArgs = listOf(OptIn.EXPERIMENTAL_COROUTINES_API)
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         useIR = true
     }
@@ -44,5 +45,5 @@ dependencies {
 
     implementation(Deps.ANDROID_NAVIGATION_COMPOSE)
 
-    implementation(Deps.KOIN_VIEWMODEL)
+    implementation(Deps.KOIN_COMPOSE)
 }

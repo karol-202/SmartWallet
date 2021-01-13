@@ -7,5 +7,5 @@ import pl.karol202.smartwallet.presentation.viewdata.TransactionViewData
 @Composable
 fun TransactionItem(transaction: TransactionViewData)
 {
-	Text(text = "ABC")
+	Text(text = transaction.amount.toString())
 }

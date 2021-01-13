@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.koin.androidx.compose.getViewModel
 import pl.karol202.smartwallet.ui.compose.theme.AppTheme
 import pl.karol202.smartwallet.ui.compose.transactions.TransactionsScreen
 
@@ -26,6 +27,7 @@ fun App()
 						{
 							AppScreen.TRANSACTIONS ->
 								TransactionsScreen(
+									transactionsViewModel = getViewModel(),
 									scaffoldState = scaffoldState
 								)
 						}

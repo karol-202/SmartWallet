@@ -16,4 +16,5 @@ object Deps
 
 	const val KOIN_CORE = "org.koin:koin-core:${Versions.KOIN}"
 	const val KOIN_VIEWMODEL = "org.koin:koin-androidx-viewmodel:${Versions.KOIN}"
+	const val KOIN_COMPOSE = "org.koin:koin-androidx-compose:${Versions.KOIN}"
 }
