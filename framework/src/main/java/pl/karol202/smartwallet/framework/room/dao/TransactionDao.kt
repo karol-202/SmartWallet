@@ -8,14 +8,17 @@ import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 interface TransactionDao
 {
 	@Insert
-	fun insert(transaction: TransactionRoomEntity)
+	suspend fun insert(transaction: TransactionRoomEntity)
 
 	@Update
-	fun update(transaction: TransactionRoomEntity)
+	suspend fun update(transaction: TransactionRoomEntity)
 
 	@Query("DELETE FROM transactions WHERE id = :id")
-	fun delete(id: Long)
+	suspend fun delete(id: Long)
 
 	@Query("SELECT * FROM transactions")
 	fun getAll(): Flow<List<TransactionRoomEntity>>
+
+	@Query("SELECT * FROM transactions WHERE id = :id")
+	fun getById(id: Long): Flow<TransactionRoomEntity>
 }

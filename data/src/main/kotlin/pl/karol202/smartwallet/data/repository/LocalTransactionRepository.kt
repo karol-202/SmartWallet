@@ -11,11 +11,18 @@ import pl.karol202.smartwallet.domain.repository.TransactionRepository
 
 class LocalTransactionRepository(private val transactionDataSource: TransactionDataSource) : TransactionRepository
 {
-	override val allTransactions get() = transactionDataSource.allTransactions.map { it.map(TransactionModel::toEntity) }
+	override val allTransactions
+		get() = transactionDataSource.allTransactions.map { it.map(TransactionModel::toEntity) }
 
-	override suspend fun addTransaction(transaction: NewTransaction) = transactionDataSource.addTransaction(transaction.toModel())
+	override fun getTransaction(transactionId: Long) =
+			transactionDataSource.getTransaction(transactionId).map(TransactionModel::toEntity)
 
-	override suspend fun updateTransaction(transaction: Transaction) = transactionDataSource.updateTransaction(transaction.toModel())
+	override suspend fun addTransaction(transaction: NewTransaction) =
+			transactionDataSource.addTransaction(transaction.toModel())
 
-	override suspend fun removeTransaction(transactionId: Long) = transactionDataSource.removeTransaction(transactionId)
+	override suspend fun updateTransaction(transaction: Transaction) =
+			transactionDataSource.updateTransaction(transaction.toModel())
+
+	override suspend fun removeTransaction(transactionId: Long) =
+			transactionDataSource.removeTransaction(transactionId)
 }

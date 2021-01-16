@@ -8,6 +8,8 @@ interface TransactionRepository
 {
 	val allTransactions: Flow<List<Transaction>>
 
+	fun getTransaction(transactionId: Long): Flow<Transaction>
+
 	suspend fun addTransaction(transaction: NewTransaction)
 
 	suspend fun updateTransaction(transaction: Transaction)

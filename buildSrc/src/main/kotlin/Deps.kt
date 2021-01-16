@@ -7,7 +7,7 @@ object Deps
 	const val ANDROID_COMPOSE_UI_TOOLING = "androidx.compose.ui:ui-tooling:${Versions.ANDROID_COMPOSE}"
 	const val ANDROID_COMPOSE_FOUNDATION = "androidx.compose.foundation:foundation:${Versions.ANDROID_COMPOSE}"
 	const val ANDROID_COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.ANDROID_COMPOSE}"
-	const val ANDROID_COMPOSE_MATERIAL_ICONS_CORE = "androidx.compose.material:material-icons-core:${Versions.ANDROID_COMPOSE}"
+	const val ANDROID_COMPOSE_MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:${Versions.ANDROID_COMPOSE}"
 
 	const val ANDROID_NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.ANDROID_NAVIGATION_COMPOSE}"
 
@@ -17,4 +17,7 @@ object Deps
 	const val KOIN_CORE = "org.koin:koin-core:${Versions.KOIN}"
 	const val KOIN_VIEWMODEL = "org.koin:koin-androidx-viewmodel:${Versions.KOIN}"
 	const val KOIN_COMPOSE = "org.koin:koin-androidx-compose:${Versions.KOIN}"
+
+	const val SEALED_ENUM = "com.github.livefront.sealed-enum:sealedenum:${Versions.SEALED_ENUM}"
+	const val SEALED_ENUM_COMPILER = "com.github.livefront.sealed-enum:sealedenumprocessor:${Versions.SEALED_ENUM}"
 }

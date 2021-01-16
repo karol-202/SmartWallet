@@ -1,6 +1,7 @@
 plugins {
     id(Plugins.ANDROID_LIBRARY)
     id(Plugins.KOTLIN_ANDROID)
+    id(Plugins.KOTLIN_KAPT)
 }
 
 android {
@@ -41,9 +42,12 @@ dependencies {
     implementation(Deps.ANDROID_COMPOSE_UI_TOOLING)
     implementation(Deps.ANDROID_COMPOSE_FOUNDATION)
     implementation(Deps.ANDROID_COMPOSE_MATERIAL)
-    implementation(Deps.ANDROID_COMPOSE_MATERIAL_ICONS_CORE)
+    implementation(Deps.ANDROID_COMPOSE_MATERIAL_ICONS_EXTENDED)
 
     implementation(Deps.ANDROID_NAVIGATION_COMPOSE)
 
     implementation(Deps.KOIN_COMPOSE)
+
+    implementation(Deps.SEALED_ENUM)
+    kapt(Deps.SEALED_ENUM_COMPILER)
 }

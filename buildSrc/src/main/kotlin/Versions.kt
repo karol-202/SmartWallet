@@ -9,4 +9,6 @@ object Versions
 	const val ANDROID_ROOM = "2.2.6"
 
 	const val KOIN = "2.2.2"
+
+	const val SEALED_ENUM = "0.2.0"
 }
