@@ -28,7 +28,7 @@ import java.time.format.FormatStyle
 
 @Composable
 fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewModel,
-                          transactionId: Long? = null,
+                          transactionId: String? = null,
                           onNavigateBack: () -> Unit)
 {
 	LaunchedEffect(transactionEditViewModel, transactionId) {

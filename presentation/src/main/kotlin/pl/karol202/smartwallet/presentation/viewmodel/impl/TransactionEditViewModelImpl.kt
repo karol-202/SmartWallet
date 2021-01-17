@@ -32,7 +32,7 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
 		}
 
-		data class Existing(val id: Long,
+		data class Existing(val id: String,
 		                    override val transaction: TransactionEditViewData) : EditState()
 		{
 			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
@@ -47,12 +47,13 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 	override val editedTransaction = editState.map { it.transaction }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
+	@Suppress("NewApi") // Not relevant as it is not an Android module
 	override fun editNewTransaction()
 	{
 		editState.value = EditState.New(TransactionEditViewData.Expense(LocalDate.now(), 0.0))
 	}
 
-	override fun editExistingTransaction(transactionId: Long) = launch {
+	override fun editExistingTransaction(transactionId: String) = launch {
 		editState.value = EditState.Existing(transactionId, getTransactionUseCase(transactionId).toEditViewData())
 	}
 

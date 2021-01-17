@@ -11,7 +11,7 @@ interface TransactionEditViewModel : ViewModel
 
 	fun editNewTransaction()
 
-	fun editExistingTransaction(transactionId: Long)
+	fun editExistingTransaction(transactionId: String)
 
 	fun setTransactionType(type: TransactionTypeViewData)
 

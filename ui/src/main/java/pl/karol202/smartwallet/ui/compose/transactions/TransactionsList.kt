@@ -19,7 +19,7 @@ import pl.karol202.smartwallet.presentation.viewdata.TransactionItemViewData
 
 @Composable
 fun TransactionsList(transactions: List<TransactionItemViewData>,
-                     onEdit: (Long) -> Unit)
+                     onEdit: (String) -> Unit)
 {
 	LazyColumn {
 		items(items = transactions) { transaction ->

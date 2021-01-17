@@ -8,7 +8,7 @@ import pl.karol202.smartwallet.framework.room.dao.TransactionDao
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 private const val DATABASE_NAME = "smartwallet.local"
-private const val DATABASE_VERSION = 2
+private const val DATABASE_VERSION = 3
 
 @Database(entities = [TransactionRoomEntity::class],
           version = DATABASE_VERSION,

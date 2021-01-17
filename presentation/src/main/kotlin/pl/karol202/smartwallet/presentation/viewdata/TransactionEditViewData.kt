@@ -1,7 +1,9 @@
 package pl.karol202.smartwallet.presentation.viewdata
 
-import pl.karol202.smartwallet.domain.entity.NewTransaction
+import pl.karol202.smartwallet.domain.entity.Existing
+import pl.karol202.smartwallet.domain.entity.New
 import pl.karol202.smartwallet.domain.entity.Transaction
+import pl.karol202.smartwallet.domain.entity.asId
 import java.time.LocalDate
 
 sealed class TransactionEditViewData
@@ -44,7 +46,7 @@ sealed class TransactionEditViewData
 	abstract fun withDate(date: LocalDate): TransactionEditViewData
 }
 
-fun Transaction.toEditViewData() = when(this)
+fun Transaction<Existing>.toEditViewData() = when(this)
 {
 	is Transaction.Expense -> TransactionEditViewData.Expense(date, amount)
 	is Transaction.Income -> TransactionEditViewData.Income(date, amount)
@@ -52,12 +54,12 @@ fun Transaction.toEditViewData() = when(this)
 
 fun TransactionEditViewData.toEntity() = when(this)
 {
-	is TransactionEditViewData.Expense -> NewTransaction.Expense(date, amount)
-	is TransactionEditViewData.Income -> NewTransaction.Income(date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(New, date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(New, date, amount)
 }
 
-fun TransactionEditViewData.toEntity(id: Long) = when(this)
+fun TransactionEditViewData.toEntity(id: String) = when(this)
 {
-	is TransactionEditViewData.Expense -> Transaction.Expense(id, date, amount)
-	is TransactionEditViewData.Income -> Transaction.Income(id, date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(id.asId(), date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(id.asId(), date, amount)
 }

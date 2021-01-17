@@ -26,9 +26,9 @@ sealed class Route
 		const val ARG_TRANSACTION_ID = "transactionId"
 
 		override val route = "transactions/{$ARG_TRANSACTION_ID}/edit"
-		override val args = listOf(navArgument(ARG_TRANSACTION_ID) { type = NavType.LongType })
+		override val args = listOf(navArgument(ARG_TRANSACTION_ID) { type = NavType.StringType })
 
-		fun constructRoute(transactionId: Long) = "transactions/$transactionId/edit"
+		fun constructRoute(transactionId: String) = "transactions/$transactionId/edit"
 	}
 
 	@GenSealedEnum

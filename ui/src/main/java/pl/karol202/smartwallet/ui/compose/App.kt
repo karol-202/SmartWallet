@@ -58,7 +58,7 @@ private fun NavGraphBuilder.addScreen(navController: NavHostController,
 				transactionEditViewModel = getViewModel(),
 				transactionId =
 					if(screen is Route.TransactionCreate) null
-					else navEntry.arguments?.getLong(Route.TransactionEdit.ARG_TRANSACTION_ID),
+					else navEntry.arguments?.getString(Route.TransactionEdit.ARG_TRANSACTION_ID),
 				onNavigateBack = {
 					navController.popBackStack()
 				}

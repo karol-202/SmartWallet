@@ -14,11 +14,11 @@ interface TransactionDao
 	suspend fun update(transaction: TransactionRoomEntity)
 
 	@Query("DELETE FROM transactions WHERE id = :id")
-	suspend fun delete(id: Long)
+	suspend fun delete(id: String)
 
 	@Query("SELECT * FROM transactions")
 	fun getAll(): Flow<List<TransactionRoomEntity>>
 
 	@Query("SELECT * FROM transactions WHERE id = :id")
-	fun getById(id: Long): Flow<TransactionRoomEntity>
+	fun getById(id: String): Flow<TransactionRoomEntity>
 }

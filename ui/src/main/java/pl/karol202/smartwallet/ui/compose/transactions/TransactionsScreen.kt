@@ -15,7 +15,7 @@ import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionsViewModel
 fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
                        scaffoldState: ScaffoldState,
                        onTransactionCreate: () -> Unit,
-                       onTransactionEdit: (Long) -> Unit)
+                       onTransactionEdit: (String) -> Unit)
 {
 	val allTransactions by transactionsViewModel.allTransactions.collectAsState()
 
@@ -47,7 +47,7 @@ fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
 
 @Composable
 private fun TransactionsScreenContent(transactions: List<TransactionItemViewData>,
-                                      onTransactionEdit: (Long) -> Unit)
+                                      onTransactionEdit: (String) -> Unit)
 {
 	TransactionsList(
 		transactions = transactions,
