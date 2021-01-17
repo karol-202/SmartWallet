@@ -19,6 +19,8 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -37,4 +39,6 @@ dependencies {
     kapt(Deps.ANDROID_ROOM_COMPILER)
 
     implementation(Deps.KOIN_VIEWMODEL)
+
+    coreLibraryDesugaring(Deps.CORE_LIBRARY_DESUGARING)
 }

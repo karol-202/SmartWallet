@@ -1,14 +1,19 @@
 package pl.karol202.smartwallet.ui.compose.transactionedit
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Toll
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.datepicker
 import kotlinx.coroutines.flow.collect
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
@@ -17,6 +22,9 @@ import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
 import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionEditViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewModel,
@@ -76,7 +84,7 @@ private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
                                          setTransactionType: (TransactionTypeViewData) -> Unit,
                                          setTransaction: (TransactionEditViewData) -> Unit)
 {
-	Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+	Column {
 		TransactionTypeSelector(
 			transaction = transaction,
 			setTransactionType = setTransactionType
@@ -100,7 +108,7 @@ private fun TransactionTypeSelector(transaction: TransactionEditViewData,
                                     setTransactionType: (TransactionTypeViewData) -> Unit)
 {
 	Row(
-		modifier = Modifier.padding(vertical = 16.dp),
+		modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
 		horizontalArrangement = Arrangement.spacedBy(16.dp)
 	) {
 		RadioButtonWithText(
@@ -125,6 +133,10 @@ private fun TransactionDetailsExpense(transaction: Expense,
 		onChange = { setTransaction(transaction.withAmount(it)) },
 		transactionType = transaction.type
 	)
+	TransactionDate(
+		date = transaction.date,
+		onChange = { setTransaction(transaction.withDate(it)) }
+	)
 }
 
 @Composable
@@ -135,6 +147,10 @@ private fun TransactionDetailsIncome(transaction: Income,
 		initialValue = transaction.amount,
 		onChange = { setTransaction(transaction.withAmount(it)) },
 		transactionType = transaction.type
+	)
+	TransactionDate(
+		date = transaction.date,
+		onChange = { setTransaction(transaction.withDate(it)) }
 	)
 }
 
@@ -157,7 +173,9 @@ private fun TransactionAmount(initialValue: Double,
 			value = it
 			it.toDoubleOrNull()?.let(onChange)
 		},
-		modifier = Modifier.fillMaxWidth(),
+		modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 24.dp),
 		textStyle = MaterialTheme.typography.h4.copy(
 			color = textColor
 		),
@@ -168,4 +186,32 @@ private fun TransactionAmount(initialValue: Double,
 			Icon(Icons.Filled.Toll)
 		}
 	)
+}
+
+@Composable
+private fun TransactionDate(date: LocalDate,
+                            onChange: (LocalDate) -> Unit)
+{
+	val dateDialog = MaterialDialog()
+
+	dateDialog.build {
+		datepicker(
+			initialDate = date,
+			onComplete = onChange
+		)
+	}
+
+	Row(
+		modifier = Modifier
+				.fillMaxWidth()
+				.clickable(onClick = { dateDialog.show() })
+				.padding(horizontal = 24.dp, vertical = 16.dp),
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		Icon(Icons.Filled.CalendarToday)
+		Text(
+			modifier = Modifier.padding(start = 16.dp),
+			text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+		)
+	}
 }
