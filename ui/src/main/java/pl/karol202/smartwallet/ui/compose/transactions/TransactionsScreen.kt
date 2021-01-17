@@ -37,13 +37,20 @@ fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
 			)
 		},
 		bodyContent = {
-			TransactionsScreenContent(allTransactions)
+			TransactionsScreenContent(
+				transactions = allTransactions,
+				onTransactionEdit = onTransactionEdit
+			)
 		},
 	)
 }
 
 @Composable
-private fun TransactionsScreenContent(transactions: List<TransactionItemViewData>)
+private fun TransactionsScreenContent(transactions: List<TransactionItemViewData>,
+                                      onTransactionEdit: (Long) -> Unit)
 {
-	TransactionsList(transactions = transactions)
+	TransactionsList(
+		transactions = transactions,
+		onEdit = onTransactionEdit
+	)
 }
