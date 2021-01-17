@@ -8,7 +8,7 @@ import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 import pl.karol202.smartwallet.framework.room.entity.toModel
 import pl.karol202.smartwallet.framework.room.entity.toRoomEntity
 
-class RoomTransactionDataStore(private val transactionsDao: TransactionDao) : TransactionDataSource
+class RoomTransactionDataSource(private val transactionsDao: TransactionDao) : TransactionDataSource
 {
 	override val allTransactions get() = transactionsDao.getAll().map { it.map(TransactionRoomEntity::toModel) }
 

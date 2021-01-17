@@ -7,9 +7,9 @@ object TransactionTypeTypeConverter
 {
 	@JvmStatic
 	@TypeConverter
-	fun fromTransactionType(transactionType: TransactionRoomEntity.TransactionType) = transactionType.name
+	fun fromTransactionType(transactionType: TransactionRoomEntity.Type) = transactionType.name
 
 	@JvmStatic
 	@TypeConverter
-	fun toTransactionType(value: String) = enumValueOf<TransactionRoomEntity.TransactionType>(value)
+	fun toTransactionType(value: String) = enumValueOf<TransactionRoomEntity.Type>(value)
 }
