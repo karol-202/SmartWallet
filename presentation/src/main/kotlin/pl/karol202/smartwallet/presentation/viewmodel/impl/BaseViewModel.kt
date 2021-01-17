@@ -5,7 +5,7 @@ import java.io.Closeable
 
 abstract class BaseViewModel : Closeable
 {
-	protected val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+	protected val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
 	fun launch(block: suspend CoroutineScope.() -> Unit)
 	{

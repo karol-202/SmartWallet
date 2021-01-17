@@ -8,5 +8,5 @@ import pl.karol202.smartwallet.presentation.viewmodel.impl.TransactionsViewModel
 
 fun presentationModule() = module {
 	factory<TransactionsViewModel> { TransactionsViewModelImpl(get()) }
-	factory<TransactionEditViewModel> { TransactionEditViewModelImpl(get()) }
+	factory<TransactionEditViewModel> { TransactionEditViewModelImpl(get(), get(), get()) }
 }

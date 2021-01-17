@@ -1,12 +1,13 @@
 package pl.karol202.smartwallet.presentation.viewmodel
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 
 interface TransactionEditViewModel : ViewModel
 {
-	val editedTransaction: StateFlow<TransactionEditViewData?>
+	val editedTransaction: Flow<TransactionEditViewData?>
+	val finishEvent: Flow<Unit>
 
 	fun editNewTransaction()
 
@@ -15,4 +16,6 @@ interface TransactionEditViewModel : ViewModel
 	fun setTransactionType(type: TransactionTypeViewData)
 
 	fun setTransaction(transaction: TransactionEditViewData)
+
+	fun apply()
 }

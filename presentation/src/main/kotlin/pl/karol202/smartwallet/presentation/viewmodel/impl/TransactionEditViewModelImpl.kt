@@ -1,38 +1,83 @@
 package pl.karol202.smartwallet.presentation.viewmodel.impl
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import pl.karol202.smartwallet.interactors.usecases.transactions.AddTransactionUseCase
 import pl.karol202.smartwallet.interactors.usecases.transactions.GetTransactionUseCase
+import pl.karol202.smartwallet.interactors.usecases.transactions.UpdateTransactionUseCase
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.toEditViewData
+import pl.karol202.smartwallet.presentation.viewdata.toEntity
 import pl.karol202.smartwallet.presentation.viewmodel.TransactionEditViewModel
 
-class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransactionUseCase) :
+class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransactionUseCase,
+                                   private val addTransactionUseCase: AddTransactionUseCase,
+                                   private val updateTransactionUseCase: UpdateTransactionUseCase) :
 		BaseViewModel(), TransactionEditViewModel
 {
-	override val editedTransaction = MutableStateFlow<TransactionEditViewData?>(null)
+	sealed class EditState
+	{
+		object Idle : EditState()
+		{
+			override val transaction: TransactionEditViewData? = null
+
+			override fun withTransaction(transaction: TransactionEditViewData) = this
+		}
+
+		data class New(override val transaction: TransactionEditViewData) : EditState()
+		{
+			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
+		}
+
+		data class Existing(val id: Long,
+		                    override val transaction: TransactionEditViewData) : EditState()
+		{
+			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
+		}
+
+		abstract val transaction: TransactionEditViewData?
+
+		abstract fun withTransaction(transaction: TransactionEditViewData): EditState
+	}
+
+	private val editState = MutableStateFlow<EditState>(EditState.Idle)
+	override val editedTransaction = editState.map { it.transaction }
+	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewTransaction()
 	{
-		editedTransaction.value = TransactionEditViewData.Expense(0.0)
+		editState.value = EditState.New(TransactionEditViewData.Expense(0.0))
 	}
 
 	override fun editExistingTransaction(transactionId: Long) = launch {
-		editedTransaction.value = getTransactionUseCase(transactionId).toEditViewData()
+		editState.value = EditState.Existing(transactionId, getTransactionUseCase(transactionId).toEditViewData())
 	}
 
 	override fun setTransactionType(type: TransactionTypeViewData)
 	{
-		val current = editedTransaction.value ?: return
-		editedTransaction.value = when(type)
+		val current = editState.value.transaction ?: return
+		setTransaction(when(type)
 		{
 			TransactionTypeViewData.EXPENSE -> current.toExpense()
 			TransactionTypeViewData.INCOME -> current.toIncome()
-		}
+		})
 	}
 
 	override fun setTransaction(transaction: TransactionEditViewData)
 	{
-		editedTransaction.value = transaction
+		editState.value = editState.value.withTransaction(transaction)
+	}
+
+	override fun apply() = launch {
+		when(val editState = editState.value)
+		{
+			is EditState.New -> addTransactionUseCase(editState.transaction.toEntity())
+			is EditState.Existing -> updateTransactionUseCase(editState.transaction.toEntity(editState.id))
+		}
+		editState.value = EditState.Idle
+		finishEvent.emit(Unit)
 	}
 }
