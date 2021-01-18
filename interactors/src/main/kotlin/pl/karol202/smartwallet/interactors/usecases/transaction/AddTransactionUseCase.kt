@@ -1,4 +1,4 @@
-package pl.karol202.smartwallet.interactors.usecases.transactions
+package pl.karol202.smartwallet.interactors.usecases.transaction
 
 import pl.karol202.smartwallet.domain.entity.New
 import pl.karol202.smartwallet.domain.entity.Transaction

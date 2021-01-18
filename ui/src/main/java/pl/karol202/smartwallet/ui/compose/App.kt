@@ -4,15 +4,14 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import org.koin.androidx.compose.getViewModel
-import pl.karol202.smartwallet.presentation.viewmodel.TransactionEditViewModel
+import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
 import pl.karol202.smartwallet.ui.compose.theme.AppTheme
-import pl.karol202.smartwallet.ui.compose.transactionedit.TransactionEditScreen
-import pl.karol202.smartwallet.ui.compose.transactions.TransactionsScreen
+import pl.karol202.smartwallet.ui.compose.screens.transactionedit.TransactionEditScreen
+import pl.karol202.smartwallet.ui.compose.screens.transactions.TransactionsScreen
 
 @Preview
 @Composable
@@ -62,6 +61,11 @@ private fun NavGraphBuilder.addScreen(navController: NavHostController,
 				onNavigateBack = {
 					navController.popBackStack()
 				}
+			)
+		Route.Categories ->
+			CategoriesScreen(
+				categoriesViewModel = getViewModel(),
+				scaffoldState = scaffoldState
 			)
 	}
 }

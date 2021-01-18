@@ -1,4 +1,4 @@
-package pl.karol202.smartwallet.ui.compose.transactionedit
+package pl.karol202.smartwallet.ui.compose.screens.transactionedit
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -2,11 +2,11 @@
     <string name="app_name">Smart Wallet</string>
 
     <string name="screen_transactions">Transactions</string>
-
     <string name="screen_transaction_new_expense">New expense</string>
     <string name="screen_transaction_new_income">New income</string>
     <string name="screen_transaction_edit_expense">Edit expense</string>
     <string name="screen_transaction_edit_income">Edit income</string>
+    <string name="screen_categories">Categories</string>
 
     <string name="transaction_type_expense">Expense</string>
     <string name="transaction_type_income">Income</string>

@@ -7,18 +7,14 @@ import com.livefront.sealedenum.GenSealedEnum
 
 sealed class Route
 {
-	object Transactions : Route()
+	object Transactions : Route(), NoArg
 	{
 		override val route = "transactions"
-
-		fun constructRoute() = route
 	}
 
-	object TransactionCreate : Route()
+	object TransactionCreate : Route(), NoArg
 	{
 		override val route = "transactions/new/edit"
-
-		fun constructRoute() = route
 	}
 
 	object TransactionEdit : Route()
@@ -31,12 +27,21 @@ sealed class Route
 		fun constructRoute(transactionId: String) = "transactions/$transactionId/edit"
 	}
 
+	object Categories : Route(), NoArg
+	{
+		override val route = "categories"
+	}
+
+	interface NoArg
+
 	@GenSealedEnum
 	companion object
 	{
-		val default = Transactions
+		val default = Categories
 	}
 
 	abstract val route: String
 	open val args: List<NamedNavArgument> = emptyList()
 }
+
+fun <A> A.constructRoute() where A : Route, A : Route.NoArg = route

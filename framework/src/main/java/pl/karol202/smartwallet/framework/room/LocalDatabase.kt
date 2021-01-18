@@ -8,12 +8,14 @@ import pl.karol202.smartwallet.framework.room.converter.TransactionTypeTypeConve
 import pl.karol202.smartwallet.framework.room.dao.CategoryDao
 import pl.karol202.smartwallet.framework.room.dao.SubcategoryDao
 import pl.karol202.smartwallet.framework.room.dao.TransactionDao
+import pl.karol202.smartwallet.framework.room.entity.CategoryRoomEntity
+import pl.karol202.smartwallet.framework.room.entity.SubcategoryRoomEntity
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 private const val DATABASE_NAME = "smartwallet.local"
-private const val DATABASE_VERSION = 3
+private const val DATABASE_VERSION = 4
 
-@Database(entities = [TransactionRoomEntity::class],
+@Database(entities = [TransactionRoomEntity::class, CategoryRoomEntity::class, SubcategoryRoomEntity::class],
           version = DATABASE_VERSION,
           exportSchema = false)
 @TypeConverters(TransactionTypeTypeConverter::class, LocalDateTypeConverter::class, CategoryTypeTypeConverter::class)
