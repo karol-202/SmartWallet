@@ -1,4 +1,4 @@
-package pl.karol202.smartwallet.presentation.viewmodel.impl
+package pl.karol202.smartwallet.presentation.viewmodel.transactionedit
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +10,7 @@ import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.toEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.toEntity
-import pl.karol202.smartwallet.presentation.viewmodel.TransactionEditViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
 import java.time.LocalDate
 
 class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransactionUseCase,

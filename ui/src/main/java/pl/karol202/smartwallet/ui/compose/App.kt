@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import org.koin.androidx.compose.getViewModel
 import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
+import pl.karol202.smartwallet.ui.compose.screens.categoryedit.CategoryEditScreen
 import pl.karol202.smartwallet.ui.compose.theme.AppTheme
 import pl.karol202.smartwallet.ui.compose.screens.transactionedit.TransactionEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.transactions.TransactionsScreen
@@ -58,14 +59,26 @@ private fun NavGraphBuilder.addScreen(navController: NavHostController,
 				transactionId =
 					if(screen is Route.TransactionCreate) null
 					else navEntry.arguments?.getString(Route.TransactionEdit.ARG_TRANSACTION_ID),
-				onNavigateBack = {
-					navController.popBackStack()
-				}
+				onNavigateBack = { navController.popBackStack() }
 			)
 		Route.Categories ->
 			CategoriesScreen(
 				categoriesViewModel = getViewModel(),
-				scaffoldState = scaffoldState
+				scaffoldState = scaffoldState,
+				onCategoryCreate = {
+					navController.navigate(Route.CategoryCreate.constructRoute())
+				},
+				onCategoryEdit = { categoryId ->
+					navController.navigate(Route.CategoryEdit.constructRoute(categoryId))
+				}
+			)
+		Route.CategoryCreate, Route.CategoryEdit ->
+			CategoryEditScreen(
+				categoryEditViewModel = getViewModel(),
+				categoryId =
+					if(screen is Route.CategoryCreate) null
+					else navEntry.arguments?.getString(Route.CategoryEdit.ARG_CATEGORY_ID),
+				onNavigateBack = { navController.popBackStack() }
 			)
 	}
 }

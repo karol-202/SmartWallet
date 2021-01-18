@@ -1,4 +1,4 @@
-package pl.karol202.smartwallet.presentation.viewmodel.impl
+package pl.karol202.smartwallet.presentation.viewmodel
 
 import kotlinx.coroutines.*
 import java.io.Closeable

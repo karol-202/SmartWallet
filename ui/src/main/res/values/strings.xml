@@ -7,9 +7,15 @@
     <string name="screen_transaction_edit_expense">Edit expense</string>
     <string name="screen_transaction_edit_income">Edit income</string>
     <string name="screen_categories">Categories</string>
+    <string name="screen_category_new">New category</string>
+    <string name="screen_category_edit">Edit category</string>
+
+    <string name="text_transaction_edit_amount">Amount</string>
+    <string name="text_category_edit_name">Name</string>
 
     <string name="transaction_type_expense">Expense</string>
     <string name="transaction_type_income">Income</string>
 
-    <string name="text_transaction_edit_amount">Amount</string>
+    <string name="category_type_expense">Expense</string>
+    <string name="category_type_income">Income</string>
 </resources>

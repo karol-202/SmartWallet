@@ -1,15 +1,18 @@
 package pl.karol202.smartwallet.presentation
 
 import org.koin.dsl.module
-import pl.karol202.smartwallet.presentation.viewmodel.CategoriesViewModel
-import pl.karol202.smartwallet.presentation.viewmodel.TransactionEditViewModel
-import pl.karol202.smartwallet.presentation.viewmodel.TransactionsViewModel
-import pl.karol202.smartwallet.presentation.viewmodel.impl.CategoriesViewModelImpl
-import pl.karol202.smartwallet.presentation.viewmodel.impl.TransactionEditViewModelImpl
-import pl.karol202.smartwallet.presentation.viewmodel.impl.TransactionsViewModelImpl
+import pl.karol202.smartwallet.presentation.viewmodel.categories.CategoriesViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.transactionedit.TransactionEditViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.transactions.TransactionsViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.categories.CategoriesViewModelImpl
+import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModelImpl
+import pl.karol202.smartwallet.presentation.viewmodel.transactionedit.TransactionEditViewModelImpl
+import pl.karol202.smartwallet.presentation.viewmodel.transactions.TransactionsViewModelImpl
 
 fun presentationModule() = module {
 	factory<TransactionsViewModel> { TransactionsViewModelImpl(get()) }
 	factory<TransactionEditViewModel> { TransactionEditViewModelImpl(get(), get(), get()) }
 	factory<CategoriesViewModel> { CategoriesViewModelImpl(get()) }
+	factory<CategoryEditViewModel> { CategoryEditViewModelImpl(get(), get(), get()) }
 }

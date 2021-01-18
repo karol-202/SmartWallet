@@ -14,7 +14,11 @@ import pl.karol202.smartwallet.domain.repository.CategoryRepository
 class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource,
                               private val idDataSource: IdDataSource) : CategoryRepository
 {
-	override val allCategories = categoryDataSource.allCategories.map { it.map(CategoryModel::toEntity) }
+	override val allCategories =
+			categoryDataSource.allCategories.map { it.map(CategoryModel::toEntity) }
+
+	override fun getCategory(categoryId: String) =
+			categoryDataSource.getCategory(categoryId).map { it.toEntity() }
 
 	override suspend fun addCategory(category: Category<New>) =
 			categoryDataSource.addCategory(category.toModel(idDataSource.createRandomId()))

@@ -32,6 +32,21 @@ sealed class Route
 		override val route = "categories"
 	}
 
+	object CategoryCreate : Route(), NoArg
+	{
+		override val route = "categories/new/edit"
+	}
+
+	object CategoryEdit : Route()
+	{
+		const val ARG_CATEGORY_ID = "categoryId"
+
+		override val route = "categories/{$ARG_CATEGORY_ID}/edit"
+		override val args = listOf(navArgument(ARG_CATEGORY_ID) { type = NavType.StringType })
+
+		fun constructRoute(categoryId: String) = "categories/$categoryId/edit"
+	}
+
 	interface NoArg
 
 	@GenSealedEnum

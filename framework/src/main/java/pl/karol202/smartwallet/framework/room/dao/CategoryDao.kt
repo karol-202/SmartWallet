@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import pl.karol202.smartwallet.framework.room.entity.CategoryRoomEntity
+import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 @Dao
 interface CategoryDao
@@ -21,4 +22,7 @@ interface CategoryDao
 
 	@Query("SELECT * FROM categories")
 	fun getAll(): Flow<List<CategoryRoomEntity>>
+
+	@Query("SELECT * FROM categories WHERE id = :id")
+	fun getById(id: String): Flow<CategoryRoomEntity>
 }
