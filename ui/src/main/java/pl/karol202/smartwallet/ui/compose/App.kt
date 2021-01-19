@@ -4,15 +4,20 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
 import pl.karol202.smartwallet.ui.compose.screens.categoryedit.CategoryEditScreen
-import pl.karol202.smartwallet.ui.compose.theme.AppTheme
+import pl.karol202.smartwallet.ui.compose.screens.subcategoryedit.SubcategoryEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.transactionedit.TransactionEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.transactions.TransactionsScreen
+import pl.karol202.smartwallet.ui.compose.theme.AppTheme
 
 @Preview
 @Composable
@@ -47,18 +52,16 @@ private fun NavGraphBuilder.addScreen(navController: NavHostController,
 				transactionsViewModel = getViewModel(),
 				scaffoldState = scaffoldState,
 				onTransactionCreate = {
-					navController.navigate(Route.TransactionCreate.constructRoute())
+					navController.navigate(Route.TransactionEdit.constructRoute())
 				},
 				onTransactionEdit = { transactionId ->
 					navController.navigate(Route.TransactionEdit.constructRoute(transactionId))
 				}
 			)
-		Route.TransactionCreate, Route.TransactionEdit ->
+		Route.TransactionEdit ->
 			TransactionEditScreen(
 				transactionEditViewModel = getViewModel(),
-				transactionId =
-					if(screen is Route.TransactionCreate) null
-					else navEntry.arguments?.getString(Route.TransactionEdit.ARG_TRANSACTION_ID),
+				transactionId = navEntry.getStringArgument(Route.TransactionEdit.ARG_TRANSACTION_ID),
 				onNavigateBack = { navController.popBackStack() }
 			)
 		Route.Categories ->
@@ -66,19 +69,35 @@ private fun NavGraphBuilder.addScreen(navController: NavHostController,
 				categoriesViewModel = getViewModel(),
 				scaffoldState = scaffoldState,
 				onCategoryCreate = {
-					navController.navigate(Route.CategoryCreate.constructRoute())
+					navController.navigate(Route.CategoryEdit.constructRoute())
 				},
 				onCategoryEdit = { categoryId ->
 					navController.navigate(Route.CategoryEdit.constructRoute(categoryId))
 				}
 			)
-		Route.CategoryCreate, Route.CategoryEdit ->
+		Route.CategoryEdit ->
 			CategoryEditScreen(
 				categoryEditViewModel = getViewModel(),
-				categoryId =
-					if(screen is Route.CategoryCreate) null
-					else navEntry.arguments?.getString(Route.CategoryEdit.ARG_CATEGORY_ID),
+				categoryId = navEntry.getStringArgument(Route.CategoryEdit.ARG_CATEGORY_ID),
+				onNavigateBack = { navController.popBackStack() },
+				onSubcategoryCreate = { categoryId ->
+					navController.navigate(Route.SubcategoryEdit.constructRoute(categoryId))
+				},
+				onSubcategoryEdit = { categoryId, subcategoryId ->
+					navController.navigate(Route.SubcategoryEdit.constructRoute(categoryId, subcategoryId))
+				}
+			)
+		Route.SubcategoryEdit ->
+			SubcategoryEditScreen(
+				subcategoryEditViewModel = getViewModel(),
+				categoryId = navEntry.requireStringArgument(Route.SubcategoryEdit.ARG_CATEGORY_ID),
+				subcategoryId = navEntry.getStringArgument(Route.SubcategoryEdit.ARG_SUBCATEGORY_ID),
 				onNavigateBack = { navController.popBackStack() }
 			)
 	}
 }
+
+private fun NavBackStackEntry.getStringArgument(key: String) = arguments?.getString(key)
+
+private fun NavBackStackEntry.requireStringArgument(key: String) =
+		getStringArgument(key) ?: throw IllegalStateException("Argument $key not found")

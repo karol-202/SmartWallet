@@ -7,6 +7,8 @@ import pl.karol202.smartwallet.domain.entity.Subcategory
 
 interface SubcategoryRepository
 {
+	fun getSubcategory(subcategoryId: String): Flow<Subcategory<Existing>>
+
 	fun getSubcategoriesOfCategory(categoryId: String): Flow<List<Subcategory<Existing>>>
 
 	suspend fun addSubcategory(subcategory: Subcategory<New>)

@@ -7,6 +7,8 @@ import pl.karol202.smartwallet.presentation.viewmodel.transactions.TransactionsV
 import pl.karol202.smartwallet.presentation.viewmodel.categories.CategoriesViewModelImpl
 import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModel
 import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModelImpl
+import pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit.SubcategoryEditViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit.SubcategoryEditViewModelImpl
 import pl.karol202.smartwallet.presentation.viewmodel.transactionedit.TransactionEditViewModelImpl
 import pl.karol202.smartwallet.presentation.viewmodel.transactions.TransactionsViewModelImpl
 
@@ -15,4 +17,5 @@ fun presentationModule() = module {
 	factory<TransactionEditViewModel> { TransactionEditViewModelImpl(get(), get(), get()) }
 	factory<CategoriesViewModel> { CategoriesViewModelImpl(get()) }
 	factory<CategoryEditViewModel> { CategoryEditViewModelImpl(get(), get(), get(), get()) }
+	factory<SubcategoryEditViewModel> { SubcategoryEditViewModelImpl(get(), get(), get()) }
 }

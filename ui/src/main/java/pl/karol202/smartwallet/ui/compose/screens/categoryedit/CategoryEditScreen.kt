@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Toll
@@ -27,7 +28,9 @@ import java.util.*
 @Composable
 fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
                        categoryId: String?,
-                       onNavigateBack: () -> Unit)
+                       onNavigateBack: () -> Unit,
+                       onSubcategoryCreate: (categoryId: String) -> Unit,
+                       onSubcategoryEdit: (categoryId: String, subcategoryId: String) -> Unit)
 {
 	LaunchedEffect(categoryEditViewModel, categoryId) {
 		if(categoryId == null) categoryEditViewModel.editNewCategory()
@@ -65,7 +68,9 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 			CategoryEditScreenContent(
 				category = editedCategory,
 				setCategory = { categoryEditViewModel.setCategory(it) },
-				subcategories = subcategories
+				subcategories = subcategories,
+				onSubcategoryCreate = { if(categoryId != null) onSubcategoryCreate(categoryId) },
+				onSubcategoryEdit = { if(categoryId != null) onSubcategoryEdit(categoryId, it) }
 			)
 		},
 	)
@@ -74,7 +79,9 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 @Composable
 private fun CategoryEditScreenContent(category: CategoryEditViewData,
                                       setCategory: (CategoryEditViewData) -> Unit,
-                                      subcategories: List<SubcategoryItemViewData>?)
+                                      subcategories: List<SubcategoryItemViewData>?,
+                                      onSubcategoryCreate: () -> Unit,
+                                      onSubcategoryEdit: (String) -> Unit)
 {
 	Column {
 		CategoryTypeSelector(
@@ -86,7 +93,9 @@ private fun CategoryEditScreenContent(category: CategoryEditViewData,
 			setName = { setCategory(category.withName(it)) }
 		)
 		if(subcategories != null) CategorySubcategories(
-			subcategories = subcategories
+			subcategories = subcategories,
+			onSubcategoryCreate = onSubcategoryCreate,
+			onSubcategoryEdit = onSubcategoryEdit
 		)
 	}
 }
@@ -129,18 +138,29 @@ private fun CategoryName(name: String,
 }
 
 @Composable
-private fun CategorySubcategories(subcategories: List<SubcategoryItemViewData>)
+private fun CategorySubcategories(subcategories: List<SubcategoryItemViewData>,
+                                  onSubcategoryCreate: () -> Unit,
+                                  onSubcategoryEdit: (String) -> Unit)
 {
 	Column {
 		Row(
 			modifier = Modifier
-				.padding(horizontal = 24.dp, vertical = 24.dp)
+					.fillMaxWidth()
+					.padding(horizontal = 24.dp, vertical = 8.dp),
+			horizontalArrangement = Arrangement.SpaceBetween,
+			verticalAlignment = Alignment.CenterVertically
 		) {
 			Text(
 				text = stringResource(R.string.text_category_edit_subcategories).toUpperCase(Locale.ROOT),
 				style = MaterialTheme.typography.overline,
-				color = MaterialTheme.colors.secondary,
+				color = MaterialTheme.colors.primaryVariant,
 				fontWeight = FontWeight.Bold
+			)
+			IconButton(
+				onClick = onSubcategoryCreate,
+				content = {
+					Icon(Icons.Filled.Add)
+				}
 			)
 		}
 		LazyColumn {

@@ -5,6 +5,8 @@ import pl.karol202.smartwallet.data.model.SubcategoryModel
 
 interface SubcategoryDataSource
 {
+    fun getSubcategory(subcategoryId: String): Flow<SubcategoryModel>
+
     fun getSubcategoriesOfCategory(categoryId: String): Flow<List<SubcategoryModel>>
 
     suspend fun addSubcategory(subcategory: SubcategoryModel)

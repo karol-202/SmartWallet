@@ -1,6 +1,5 @@
 package pl.karol202.smartwallet.presentation.viewmodel.categoryedit
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -52,7 +51,6 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 	override val subcategories = editState.map { it.subcategories }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
-	@Suppress("NewApi") // Not relevant as it is not an Android module
 	override fun editNewCategory()
 	{
 		editState.value = EditState.New(CategoryEditViewData("", CategoryTypeViewData.EXPENSE))
