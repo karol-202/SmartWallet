@@ -1,9 +1,12 @@
 package pl.karol202.smartwallet.data.datasource
 
+import kotlinx.coroutines.flow.Flow
 import pl.karol202.smartwallet.data.model.SubcategoryModel
 
 interface SubcategoryDataSource
 {
+    fun getSubcategoriesOfCategory(categoryId: String): Flow<List<SubcategoryModel>>
+
     suspend fun addSubcategory(subcategory: SubcategoryModel)
 
     suspend fun updateSubcategory(subcategory: SubcategoryModel)
