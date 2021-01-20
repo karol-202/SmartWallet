@@ -47,7 +47,7 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 	override val editedTransaction = editState.map { it.transaction }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
-	@Suppress("NewApi") // Not relevant as it is not an Android module
+	//@Suppress("NewApi") // Not relevant as it is not an Android module
 	override fun editNewTransaction()
 	{
 		editState.value = EditState.New(TransactionEditViewData.Expense(LocalDate.now(), 0.0))

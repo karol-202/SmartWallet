@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
@@ -43,6 +44,7 @@ fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewMo
 		topBar = {
 			SubcategoryEditScreenAppbar(
 				subcategoryExists = subcategoryId != null,
+				onNavigateBack = onNavigateBack,
 				onRemove = { removeDialogVisible = true }
 			)
 		},
@@ -71,14 +73,21 @@ fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewMo
 }
 
 @Composable
-fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
-                                onRemove: () -> Unit)
+private fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
+                                        onNavigateBack: () -> Unit,
+                                        onRemove: () -> Unit)
 {
 	TopAppBar(
 		title = {
 			Text(
 				text = stringResource(if(subcategoryExists) R.string.screen_subcategory_edit
 				                      else R.string.screen_subcategory_new)
+			)
+		},
+		navigationIcon = {
+			AppBarIcon(
+				imageVector = Icons.Filled.ArrowBack,
+				onClick = { onNavigateBack() }
 			)
 		},
 		actions = {

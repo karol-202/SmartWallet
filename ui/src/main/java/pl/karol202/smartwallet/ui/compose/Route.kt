@@ -1,18 +1,37 @@
 package pl.karol202.smartwallet.ui.compose
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.ShoppingBasket
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.compose.NamedNavArgument
 import androidx.navigation.compose.navArgument
 import com.livefront.sealedenum.GenSealedEnum
+import pl.karol202.smartwallet.ui.R
 
-sealed class Route
+interface Route
 {
-	object Transactions : Route(), NoArg
+	val route: String
+	val args: List<NamedNavArgument> get() = emptyList()
+
+	interface TopLevel : Route
+	{
+		val nameResource: Int
+		val icon: ImageVector
+	}
+}
+
+sealed class Routes : Route
+{
+	object Transactions : Routes(), Route.TopLevel
 	{
 		override val route = "transactions"
+		override val nameResource = R.string.screen_transactions
+		override val icon = Icons.Filled.ShoppingBasket
 	}
 
-	object TransactionEdit : Route()
+	object TransactionEdit : Routes()
 	{
 		const val ARG_TRANSACTION_ID = "transactionId"
 
@@ -23,12 +42,14 @@ sealed class Route
 				"transactionEdit" + constructQueryParams(ARG_TRANSACTION_ID to transactionId)
 	}
 
-	object Categories : Route(), NoArg
+	object Categories : Routes(), Route.TopLevel
 	{
 		override val route = "categories"
+		override val nameResource = R.string.screen_categories
+		override val icon = Icons.Filled.Bookmark
 	}
 
-	object CategoryEdit : Route()
+	object CategoryEdit : Routes()
 	{
 		const val ARG_CATEGORY_ID = "categoryId"
 
@@ -39,7 +60,7 @@ sealed class Route
 				"categoryEdit" + constructQueryParams(ARG_CATEGORY_ID to categoryId)
 	}
 
-	object SubcategoryEdit : Route()
+	object SubcategoryEdit : Routes()
 	{
 		const val ARG_CATEGORY_ID = "categoryId"
 		const val ARG_SUBCATEGORY_ID = "subcategoryId"
@@ -52,21 +73,17 @@ sealed class Route
 				"categories/$categoryId/subcategoryEdit" + constructQueryParams(ARG_SUBCATEGORY_ID to subcategoryId)
 	}
 
-	interface NoArg
-
 	@GenSealedEnum
 	companion object
 	{
 		val default = Transactions
+		val topLevel = values.filterIsInstance<Route.TopLevel>()
 	}
-
-	abstract val route: String
-	open val args: List<NamedNavArgument> = emptyList()
-
-	protected fun constructQueryParams(vararg params: Pair<String, String?>) =
-			if(params.isEmpty()) ""
-			else "?" + params.filter { (_, value) -> value != null }
-					.joinToString(separator = "&") { (key, value) -> "$key=$value" }
 }
 
-fun <A> A.constructRoute() where A : Route, A : Route.NoArg = route
+fun Route.TopLevel.constructRoute() = route
+
+private fun constructQueryParams(vararg params: Pair<String, String?>) =
+		if(params.isEmpty()) ""
+		else "?" + params.filter { (_, value) -> value != null }
+				.joinToString(separator = "&") { (key, value) -> "$key=$value" }

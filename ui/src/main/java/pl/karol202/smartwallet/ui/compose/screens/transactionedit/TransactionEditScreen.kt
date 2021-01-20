@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Toll
@@ -21,6 +22,7 @@ import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
+import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionEditViewModel
@@ -45,20 +47,10 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 
 	Scaffold(
 		topBar = {
-			TopAppBar(
-				title = {
-					Text(
-						text = stringResource(when(editedTransaction)
-						{
-							is Expense ->
-								if(transactionId == null) R.string.screen_transaction_new_expense
-								else R.string.screen_transaction_edit_expense
-							is Income ->
-								if(transactionId == null) R.string.screen_transaction_new_income
-								else R.string.screen_transaction_edit_income
-						})
-					)
-				}
+			TransactionEditScreenAppbar(
+				transactionId = transactionId,
+				editedTransaction = editedTransaction,
+				onNavigateBack = onNavigateBack
 			)
 		},
 		floatingActionButton = {
@@ -76,6 +68,35 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 				transaction = editedTransaction,
 				setTransactionType = { transactionEditViewModel.setTransactionType(it) },
 				setTransaction = { transactionEditViewModel.setTransaction(it) }
+			)
+		},
+	)
+}
+
+@Composable
+fun TransactionEditScreenAppbar(transactionId: String?,
+                                editedTransaction: TransactionEditViewData,
+                                onNavigateBack: () -> Unit)
+{
+	TopAppBar(
+		title = {
+			Text(
+				text = stringResource(
+					when(editedTransaction)
+					{
+						is Expense ->
+							if(transactionId == null) R.string.screen_transaction_new_expense
+							else R.string.screen_transaction_edit_expense
+						is Income ->
+							if(transactionId == null) R.string.screen_transaction_new_income
+							else R.string.screen_transaction_edit_income
+					})
+			)
+		},
+		navigationIcon = {
+			AppBarIcon(
+				imageVector = Icons.Filled.ArrowBack,
+				onClick = { onNavigateBack() }
 			)
 		},
 	)

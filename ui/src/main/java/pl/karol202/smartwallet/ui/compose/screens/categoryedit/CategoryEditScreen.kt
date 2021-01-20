@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +48,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 		topBar = {
 			CategoryEditScreenAppbar(
 				categoryExists = categoryId != null,
+				onNavigateBack = onNavigateBack,
 				onRemove = { removeDialogVisible = true }
 			)
 		},
@@ -83,14 +81,21 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 }
 
 @Composable
-fun CategoryEditScreenAppbar(categoryExists: Boolean,
-                             onRemove: () -> Unit)
+private fun CategoryEditScreenAppbar(categoryExists: Boolean,
+                                     onNavigateBack: () -> Unit,
+                                     onRemove: () -> Unit)
 {
 	TopAppBar(
 		title = {
 			Text(
 				text = stringResource(if(categoryExists) R.string.screen_category_edit
 				                      else R.string.screen_category_new)
+			)
+		},
+		navigationIcon = {
+			AppBarIcon(
+				imageVector = Icons.Filled.ArrowBack,
+				onClick = { onNavigateBack() }
 			)
 		},
 		actions = {

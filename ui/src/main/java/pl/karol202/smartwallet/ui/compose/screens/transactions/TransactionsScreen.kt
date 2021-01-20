@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,11 +20,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pl.karol202.smartwallet.presentation.viewdata.TransactionItemViewData
 import pl.karol202.smartwallet.ui.R
+import pl.karol202.smartwallet.ui.compose.Route
+import pl.karol202.smartwallet.ui.compose.drawer.DrawerContent
+import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionsViewModel
 
 @Composable
 fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
                        scaffoldState: ScaffoldState,
+                       onRouteSelect: (Route.TopLevel) -> Unit,
                        onTransactionCreate: () -> Unit,
                        onTransactionEdit: (String) -> Unit)
 {
@@ -35,7 +40,19 @@ fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
 			TopAppBar(
 				title = {
 					Text(text = stringResource(R.string.screen_transactions))
+				},
+				navigationIcon = {
+					AppBarIcon(
+						imageVector = Icons.Filled.Menu,
+						onClick = { scaffoldState.drawerState.open() }
+					)
 				}
+			)
+		},
+		drawerContent = {
+			DrawerContent(
+				onRouteSelect = onRouteSelect,
+				onDrawerClose = { scaffoldState.drawerState.close() }
 			)
 		},
 		floatingActionButton = {

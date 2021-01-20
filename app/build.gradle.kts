@@ -20,6 +20,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -43,4 +44,6 @@ dependencies {
     implementation(project(":ui"))
 
     implementation(Deps.KOIN_VIEWMODEL)
+
+    coreLibraryDesugaring(Deps.CORE_LIBRARY_DESUGARING)
 }
