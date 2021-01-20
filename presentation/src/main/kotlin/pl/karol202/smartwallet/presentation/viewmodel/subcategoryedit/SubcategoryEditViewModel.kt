@@ -19,4 +19,8 @@ interface SubcategoryEditViewModel : ViewModel
 	fun setSubcategory(subcategory: SubcategoryEditViewData)
 
 	fun apply()
+
+	fun cancel()
+
+	fun removeSubcategory()
 }

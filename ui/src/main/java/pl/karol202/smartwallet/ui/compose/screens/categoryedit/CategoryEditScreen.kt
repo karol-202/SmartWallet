@@ -165,14 +165,18 @@ private fun CategorySubcategories(subcategories: List<SubcategoryItemViewData>,
 		}
 		LazyColumn {
 			items(subcategories) {
-				CategorySubcategoryItem(subcategory = it)
+				CategorySubcategoryItem(
+					subcategory = it,
+					onEdit = { onSubcategoryEdit(it.id) }
+				)
 			}
 		}
 	}
 }
 
 @Composable
-private fun CategorySubcategoryItem(subcategory: SubcategoryItemViewData)
+private fun CategorySubcategoryItem(subcategory: SubcategoryItemViewData,
+                                    onEdit: () -> Unit)
 {
 	Row(
 		modifier = Modifier
@@ -183,11 +187,11 @@ private fun CategorySubcategoryItem(subcategory: SubcategoryItemViewData)
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Text(text = subcategory.name)
-		/*IconButton(
+		IconButton(
 			onClick = onEdit,
 			content = {
 				Icon(Icons.Filled.Edit)
 			}
-		)*/
+		)
 	}
 }

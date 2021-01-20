@@ -6,16 +6,14 @@ import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.interactors.usecases.category.AddCategoryUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoryUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.UpdateCategoryUseCase
-import pl.karol202.smartwallet.interactors.usecases.subcategory.AddSubcategoryUseCase
-import pl.karol202.smartwallet.interactors.usecases.subcategory.GetSubcategoriesOfCategoryUseCase
-import pl.karol202.smartwallet.interactors.usecases.subcategory.GetSubcategoryUseCase
-import pl.karol202.smartwallet.interactors.usecases.subcategory.UpdateSubcategoryUseCase
+import pl.karol202.smartwallet.interactors.usecases.subcategory.*
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
 
 class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcategoryUseCase,
                                    private val addSubcategoryUseCase: AddSubcategoryUseCase,
-                                   private val updateSubcategoryUseCase: UpdateSubcategoryUseCase) :
+                                   private val updateSubcategoryUseCase: UpdateSubcategoryUseCase,
+                                   private val removeSubcategoryUseCase: RemoveSubcategoryUseCase) :
 		BaseViewModel(), SubcategoryEditViewModel
 {
 	sealed class EditState
@@ -70,6 +68,21 @@ class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcate
 			is EditState.New -> addSubcategoryUseCase(editState.subcategory.toEntity())
 			is EditState.Existing -> updateSubcategoryUseCase(editState.subcategory.toEntity(editState.id))
 		}
+		finishAndReset()
+	}
+
+	override fun cancel() = launch {
+		finishAndReset()
+	}
+
+	override fun removeSubcategory() = launch {
+		val existingEditState = editState.value as? EditState.Existing ?: return@launch
+		removeSubcategoryUseCase(existingEditState.id)
+		finishAndReset()
+	}
+
+	private suspend fun finishAndReset()
+	{
 		editState.value = EditState.Idle
 		finishEvent.emit(Unit)
 	}
