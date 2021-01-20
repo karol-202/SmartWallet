@@ -17,7 +17,6 @@ import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidSubcategoryEditViewModel
-import java.util.*
 
 @Composable
 fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewModel,
@@ -123,8 +122,8 @@ private fun SubcategoryRemoveDialog(subcategoryName: String,
 {
 	SimpleAlertDialog(
 		title = stringResource(R.string.dialog_subcategory_remove_title, subcategoryName),
-		confirmText = stringResource(R.string.dialog_subcategory_remove_ok),
-		dismissText = stringResource(R.string.dialog_subcategory_remove_ok),
+		confirmText = stringResource(R.string.text_dialog_remove),
+		dismissText = stringResource(R.string.text_dialog_cancel),
 		onConfirm = onConfirm,
 		onDismiss = onDismiss
 	)

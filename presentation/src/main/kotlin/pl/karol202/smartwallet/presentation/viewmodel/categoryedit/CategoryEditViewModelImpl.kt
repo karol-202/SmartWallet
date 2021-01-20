@@ -5,14 +5,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.interactors.usecases.category.AddCategoryUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoryUseCase
+import pl.karol202.smartwallet.interactors.usecases.category.RemoveCategoryUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.UpdateCategoryUseCase
 import pl.karol202.smartwallet.interactors.usecases.subcategory.GetSubcategoriesOfCategoryUseCase
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit.SubcategoryEditViewModelImpl
 
 class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCase,
                                 private val addCategoryUseCase: AddCategoryUseCase,
                                 private val updateCategoryUseCase: UpdateCategoryUseCase,
+                                private val removeCategoryUseCase: RemoveCategoryUseCase,
                                 private val getSubcategoriesOfCategoryUseCase: GetSubcategoriesOfCategoryUseCase) :
 		BaseViewModel(), CategoryEditViewModel
 {
@@ -75,6 +78,17 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 			is EditState.New -> addCategoryUseCase(editState.category.toEntity())
 			is EditState.Existing -> updateCategoryUseCase(editState.category.toEntity(editState.id))
 		}
+		cancel()
+	}
+
+	override fun removeCategory() = launch {
+		val existingEditState = editState.value as? EditState.Existing ?: return@launch
+		removeCategoryUseCase(existingEditState.id)
+		cancel()
+	}
+
+	private suspend fun cancel()
+	{
 		editState.value = EditState.Idle
 		finishEvent.emit(Unit)
 	}

@@ -18,4 +18,6 @@ interface CategoryEditViewModel : ViewModel
 	fun setCategory(category: CategoryEditViewData)
 
 	fun apply()
+
+	fun removeCategory()
 }

@@ -20,7 +20,5 @@ interface SubcategoryEditViewModel : ViewModel
 
 	fun apply()
 
-	fun cancel()
-
 	fun removeSubcategory()
 }

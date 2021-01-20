@@ -6,14 +6,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Toll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collect
@@ -21,7 +20,9 @@ import pl.karol202.smartwallet.presentation.viewdata.CategoryEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.CategoryTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.SubcategoryItemViewData
 import pl.karol202.smartwallet.ui.R
+import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
+import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidCategoryEditViewModel
 import java.util.*
 
@@ -43,15 +44,13 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 	val editedCategory = categoryEditViewModel.editedCategory.collectAsState(null).value ?: return
 	val subcategories = categoryEditViewModel.subcategories.collectAsState(null).value
 
+	var removeDialogVisible by remember { mutableStateOf(false) }
+
 	Scaffold(
 		topBar = {
-			TopAppBar(
-				title = {
-					Text(
-						text = stringResource(if(categoryId == null) R.string.screen_category_new
-						                      else R.string.screen_category_edit)
-					)
-				}
+			CategoryEditScreenAppbar(
+				categoryExists = categoryId != null,
+				onRemove = { removeDialogVisible = true }
 			)
 		},
 		floatingActionButton = {
@@ -73,6 +72,33 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 				onSubcategoryEdit = { if(categoryId != null) onSubcategoryEdit(categoryId, it) }
 			)
 		},
+	)
+
+	if(removeDialogVisible) CategoryRemoveDialog(
+		categoryName = editedCategory.name,
+		onConfirm = { categoryEditViewModel.removeCategory() },
+		onDismiss = { removeDialogVisible = false }
+	)
+}
+
+@Composable
+fun CategoryEditScreenAppbar(categoryExists: Boolean,
+                             onRemove: () -> Unit)
+{
+	TopAppBar(
+		title = {
+			Text(
+				text = stringResource(if(categoryExists) R.string.screen_category_edit
+				                      else R.string.screen_category_new)
+			)
+		},
+		actions = {
+			AppBarIcon(
+				imageVector = Icons.Filled.Delete,
+				enabled = categoryExists,
+				onClick = onRemove
+			)
+		}
 	)
 }
 
@@ -194,4 +220,18 @@ private fun CategorySubcategoryItem(subcategory: SubcategoryItemViewData,
 			}
 		)
 	}
+}
+
+@Composable
+private fun CategoryRemoveDialog(categoryName: String,
+                                 onConfirm: () -> Unit,
+                                 onDismiss: () -> Unit)
+{
+	SimpleAlertDialog(
+		title = stringResource(R.string.dialog_category_remove_title, categoryName),
+		confirmText = stringResource(R.string.text_dialog_remove),
+		dismissText = stringResource(R.string.text_dialog_cancel),
+		onConfirm = onConfirm,
+		onDismiss = onDismiss
+	)
 }
