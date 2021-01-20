@@ -8,8 +8,8 @@ import pl.karol202.smartwallet.domain.repository.CategoryRepository
 import pl.karol202.smartwallet.domain.repository.TransactionRepository
 import pl.karol202.smartwallet.interactors.usecases.SuspendUseCase1
 
-class GetCategoryUseCase(override val function: suspend (String) -> Category<Existing>) :
-		SuspendUseCase1<String, Category<Existing>>
+class GetCategoryUseCase(override val function: suspend (String) -> Category<Existing>?) :
+		SuspendUseCase1<String, Category<Existing>?>
 
 fun getCategoryUseCaseFactory(categoryRepository: CategoryRepository) = GetCategoryUseCase { id ->
 	categoryRepository.getCategory(id).first()

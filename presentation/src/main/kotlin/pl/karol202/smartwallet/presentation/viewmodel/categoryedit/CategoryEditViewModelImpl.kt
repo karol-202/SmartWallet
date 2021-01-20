@@ -59,7 +59,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 	override fun editExistingCategory(categoryId: String) = launch {
 		editState.value = EditState.Existing(
 			id = categoryId,
-			category = getCategoryUseCase(categoryId).toEditViewData(),
+			category = getCategoryUseCase(categoryId)?.toEditViewData() ?: error("Category does not exist"),
 			subcategories = getSubcategoriesOfCategoryUseCase(categoryId).map { it.toItemViewData() }
 		)
 	}

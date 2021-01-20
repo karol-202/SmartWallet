@@ -7,7 +7,7 @@ interface CategoryDataSource
 {
     val allCategories: Flow<List<CategoryModel>>
 
-    fun getCategory(categoryId: String): Flow<CategoryModel>
+    fun getCategory(categoryId: String): Flow<CategoryModel?>
 
     suspend fun addCategory(category: CategoryModel)
 

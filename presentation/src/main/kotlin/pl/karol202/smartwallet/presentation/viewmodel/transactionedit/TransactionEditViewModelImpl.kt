@@ -54,7 +54,9 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 	}
 
 	override fun editExistingTransaction(transactionId: String) = launch {
-		editState.value = EditState.Existing(transactionId, getTransactionUseCase(transactionId).toEditViewData())
+		editState.value = EditState.Existing(
+			id = transactionId,
+			transaction = getTransactionUseCase(transactionId)?.toEditViewData() ?: error("Transaction does not exist"))
 	}
 
 	override fun setTransactionType(type: TransactionTypeViewData)

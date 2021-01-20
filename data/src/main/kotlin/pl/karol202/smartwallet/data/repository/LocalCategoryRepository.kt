@@ -18,7 +18,7 @@ class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource
 			categoryDataSource.allCategories.map { it.map(CategoryModel::toEntity) }
 
 	override fun getCategory(categoryId: String) =
-			categoryDataSource.getCategory(categoryId).map { it.toEntity() }
+			categoryDataSource.getCategory(categoryId).map { it?.toEntity() }
 
 	override suspend fun addCategory(category: Category<New>) =
 			categoryDataSource.addCategory(category.toModel(idDataSource.createRandomId()))

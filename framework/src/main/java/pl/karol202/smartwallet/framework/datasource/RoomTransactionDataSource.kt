@@ -13,7 +13,7 @@ class RoomTransactionDataSource(private val transactionsDao: TransactionDao) : T
 	override val allTransactions get() = transactionsDao.getAll().map { it.map(TransactionRoomEntity::toModel) }
 
 	override fun getTransaction(transactionId: String) =
-			transactionsDao.getById(transactionId).map(TransactionRoomEntity::toModel)
+			transactionsDao.getById(transactionId).map { it?.toModel() }
 
 	override suspend fun addTransaction(transaction: TransactionModel) =
 			transactionsDao.insert(transaction.toRoomEntity())

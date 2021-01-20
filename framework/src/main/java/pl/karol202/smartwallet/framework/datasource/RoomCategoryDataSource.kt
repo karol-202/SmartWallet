@@ -13,7 +13,7 @@ class RoomCategoryDataSource(private val categoryDao: CategoryDao) : CategoryDat
 	override val allCategories = categoryDao.getAll().map { it.map(CategoryRoomEntity::toModel) }
 
 	override fun getCategory(categoryId: String) =
-			categoryDao.getById(categoryId).map { it.toModel() }
+			categoryDao.getById(categoryId).map { it?.toModel() }
 
 	override suspend fun addCategory(category: CategoryModel) =
 			categoryDao.insert(category.toRoomEntity())

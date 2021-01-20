@@ -1,6 +1,5 @@
 package pl.karol202.smartwallet.framework.datasource
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.data.datasource.SubcategoryDataSource
 import pl.karol202.smartwallet.data.model.SubcategoryModel
@@ -12,7 +11,7 @@ import pl.karol202.smartwallet.framework.room.entity.toRoomEntity
 class RoomSubcategoryDataSource(private val subcategoryDao: SubcategoryDao) : SubcategoryDataSource
 {
 	override fun getSubcategory(subcategoryId: String) =
-			subcategoryDao.getById(subcategoryId).map { it.toModel() }
+			subcategoryDao.getById(subcategoryId).map { it?.toModel() }
 
 	override fun getSubcategoriesOfCategory(categoryId: String) =
 			subcategoryDao.getByCategory(categoryId).map { it.map(SubcategoryRoomEntity::toModel) }

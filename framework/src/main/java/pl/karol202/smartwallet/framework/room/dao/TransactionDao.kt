@@ -20,5 +20,5 @@ interface TransactionDao
 	fun getAll(): Flow<List<TransactionRoomEntity>>
 
 	@Query("SELECT * FROM transactions WHERE id = :id")
-	fun getById(id: String): Flow<TransactionRoomEntity>
+	fun getById(id: String): Flow<TransactionRoomEntity?>
 }

@@ -1,6 +1,5 @@
 package pl.karol202.smartwallet.data.repository
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.data.datasource.IdDataSource
 import pl.karol202.smartwallet.data.datasource.SubcategoryDataSource
@@ -16,7 +15,7 @@ class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryD
                                  private val idDataSource: IdDataSource) : SubcategoryRepository
 {
 	override fun getSubcategory(subcategoryId: String) =
-			subcategoryDataSource.getSubcategory(subcategoryId).map { it.toEntity() }
+			subcategoryDataSource.getSubcategory(subcategoryId).map { it?.toEntity() }
 
 	override fun getSubcategoriesOfCategory(categoryId: String) =
 			subcategoryDataSource.getSubcategoriesOfCategory(categoryId).map { it.map(SubcategoryModel::toEntity) }

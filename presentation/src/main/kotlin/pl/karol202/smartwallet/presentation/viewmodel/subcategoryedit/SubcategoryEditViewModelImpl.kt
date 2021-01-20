@@ -55,7 +55,7 @@ class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcate
 	override fun editExistingSubcategory(subcategoryId: String) = launch {
 		editState.value = EditState.Existing(
 			id = subcategoryId,
-			subcategory = getSubcategoryUseCase(subcategoryId).toEditViewData(),
+			subcategory = getSubcategoryUseCase(subcategoryId)?.toEditViewData() ?: error("Subcategory does not exist"),
 		)
 	}
 

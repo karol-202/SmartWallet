@@ -18,7 +18,7 @@ class LocalTransactionRepository(private val transactionDataSource: TransactionD
 		get() = transactionDataSource.allTransactions.map { it.map(TransactionModel::toEntity) }
 
 	override fun getTransaction(transactionId: String) =
-			transactionDataSource.getTransaction(transactionId).map(TransactionModel::toEntity)
+			transactionDataSource.getTransaction(transactionId).map { it?.toEntity() }
 
 	override suspend fun addTransaction(transaction: Transaction<New>) =
 			transactionDataSource.addTransaction(transaction.toModel(idDataSource.createRandomId()))

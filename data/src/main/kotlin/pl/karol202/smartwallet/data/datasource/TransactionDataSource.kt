@@ -7,7 +7,7 @@ interface TransactionDataSource
 {
     val allTransactions: Flow<List<TransactionModel>>
 
-    fun getTransaction(transactionId: String): Flow<TransactionModel>
+    fun getTransaction(transactionId: String): Flow<TransactionModel?>
 
     suspend fun addTransaction(transaction: TransactionModel)
 

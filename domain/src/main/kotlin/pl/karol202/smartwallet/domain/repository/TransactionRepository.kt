@@ -9,7 +9,7 @@ interface TransactionRepository
 {
 	val allTransactions: Flow<List<Transaction<Existing>>>
 
-	fun getTransaction(transactionId: String): Flow<Transaction<Existing>>
+	fun getTransaction(transactionId: String): Flow<Transaction<Existing>?>
 
 	suspend fun addTransaction(transaction: Transaction<New>)
 
