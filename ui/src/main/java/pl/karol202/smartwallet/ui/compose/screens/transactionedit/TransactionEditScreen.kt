@@ -4,10 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Toll
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,14 +13,13 @@ import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.datepicker
 import kotlinx.coroutines.flow.collect
-import pl.karol202.smartwallet.presentation.viewdata.CategoryTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
-import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
+import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionEditViewModel
 import java.time.LocalDate
@@ -45,12 +41,15 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 
 	val editedTransaction = transactionEditViewModel.editedTransaction.collectAsState(null).value ?: return
 
+	var removeDialogVisible by remember { mutableStateOf(false) }
+
 	Scaffold(
 		topBar = {
 			TransactionEditScreenAppbar(
-				transactionId = transactionId,
+				transactionExists = transactionId != null,
 				editedTransaction = editedTransaction,
-				onNavigateBack = onNavigateBack
+				onNavigateBack = onNavigateBack,
+				onRemove = { removeDialogVisible = true }
 			)
 		},
 		floatingActionButton = {
@@ -71,12 +70,18 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 			)
 		},
 	)
+
+	if(removeDialogVisible) TransactionRemoveDialog(
+		onConfirm = { transactionEditViewModel.removeTransaction() },
+		onDismiss = { removeDialogVisible = false }
+	)
 }
 
 @Composable
-fun TransactionEditScreenAppbar(transactionId: String?,
+fun TransactionEditScreenAppbar(transactionExists: Boolean,
                                 editedTransaction: TransactionEditViewData,
-                                onNavigateBack: () -> Unit)
+                                onNavigateBack: () -> Unit,
+                                onRemove: () -> Unit)
 {
 	TopAppBar(
 		title = {
@@ -85,10 +90,10 @@ fun TransactionEditScreenAppbar(transactionId: String?,
 					when(editedTransaction)
 					{
 						is Expense ->
-							if(transactionId == null) R.string.screen_transaction_new_expense
+							if(!transactionExists) R.string.screen_transaction_new_expense
 							else R.string.screen_transaction_edit_expense
 						is Income ->
-							if(transactionId == null) R.string.screen_transaction_new_income
+							if(!transactionExists) R.string.screen_transaction_new_income
 							else R.string.screen_transaction_edit_income
 					})
 			)
@@ -99,6 +104,13 @@ fun TransactionEditScreenAppbar(transactionId: String?,
 				onClick = { onNavigateBack() }
 			)
 		},
+		actions = {
+			AppBarIcon(
+				imageVector = Icons.Filled.Delete,
+				enabled = transactionExists,
+				onClick = onRemove
+			)
+		}
 	)
 }
 
@@ -248,4 +260,17 @@ private fun TransactionDate(date: LocalDate,
 			text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 		)
 	}
+}
+
+@Composable
+private fun TransactionRemoveDialog(onConfirm: () -> Unit,
+                                    onDismiss: () -> Unit)
+{
+	SimpleAlertDialog(
+		title = stringResource(R.string.dialog_transaction_remove_title),
+		confirmText = stringResource(R.string.text_dialog_remove),
+		dismissText = stringResource(R.string.text_dialog_cancel),
+		onConfirm = onConfirm,
+		onDismiss = onDismiss
+	)
 }

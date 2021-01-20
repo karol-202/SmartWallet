@@ -19,4 +19,6 @@ interface TransactionEditViewModel : ViewModel
 	fun setTransaction(transaction: TransactionEditViewData)
 
 	fun apply()
+
+	fun removeTransaction()
 }

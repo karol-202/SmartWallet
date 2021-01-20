@@ -5,17 +5,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.interactors.usecases.transaction.AddTransactionUseCase
 import pl.karol202.smartwallet.interactors.usecases.transaction.GetTransactionUseCase
+import pl.karol202.smartwallet.interactors.usecases.transaction.RemoveTransactionUseCase
 import pl.karol202.smartwallet.interactors.usecases.transaction.UpdateTransactionUseCase
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.toEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.toEntity
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModelImpl
 import java.time.LocalDate
 
 class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransactionUseCase,
                                    private val addTransactionUseCase: AddTransactionUseCase,
-                                   private val updateTransactionUseCase: UpdateTransactionUseCase) :
+                                   private val updateTransactionUseCase: UpdateTransactionUseCase,
+                                   private val removeTransactionUseCase: RemoveTransactionUseCase) :
 		BaseViewModel(), TransactionEditViewModel
 {
 	sealed class EditState
@@ -80,6 +83,17 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 			is EditState.New -> addTransactionUseCase(editState.transaction.toEntity())
 			is EditState.Existing -> updateTransactionUseCase(editState.transaction.toEntity(editState.id))
 		}
+		cancel()
+	}
+
+	override fun removeTransaction() = launch {
+		val existingEditState = editState.value as? EditState.Existing ?: return@launch
+		removeTransactionUseCase(existingEditState.id)
+		cancel()
+	}
+
+	private suspend fun cancel()
+	{
 		editState.value = EditState.Idle
 		finishEvent.emit(Unit)
 	}
