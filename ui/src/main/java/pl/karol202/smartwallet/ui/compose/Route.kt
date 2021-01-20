@@ -57,7 +57,7 @@ sealed class Route
 	@GenSealedEnum
 	companion object
 	{
-		val default = Categories
+		val default = Transactions
 	}
 
 	abstract val route: String

@@ -15,12 +15,14 @@ import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.datepicker
 import kotlinx.coroutines.flow.collect
+import pl.karol202.smartwallet.presentation.viewdata.CategoryTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
 import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
+import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionEditViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -107,21 +109,32 @@ private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
 private fun TransactionTypeSelector(transaction: TransactionEditViewData,
                                     setTransactionType: (TransactionTypeViewData) -> Unit)
 {
-	Row(
-		modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-		horizontalArrangement = Arrangement.spacedBy(16.dp)
-	) {
-		RadioButtonWithText(
-			text = stringResource(R.string.transaction_type_expense),
-			selected = transaction is Expense,
-			onClick = { setTransactionType(TransactionTypeViewData.EXPENSE) }
-		)
-		RadioButtonWithText(
-			text = stringResource(R.string.transaction_type_income),
-			selected = transaction is Income,
-			onClick = { setTransactionType(TransactionTypeViewData.INCOME) }
-		)
-	}
+	Box(
+		modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 24.dp, vertical = 16.dp),
+		contentAlignment = Alignment.Center,
+		content = {
+			ToggleButtonGroup(
+				content = {
+					item(
+						checked = transaction is Expense,
+						onClick = { setTransactionType(TransactionTypeViewData.EXPENSE) },
+						content = {
+							Text(text = stringResource(R.string.transaction_type_expense))
+						}
+					)
+					item(
+						checked = transaction is Income,
+						onClick = { setTransactionType(TransactionTypeViewData.INCOME) },
+						content = {
+							Text(text = stringResource(R.string.transaction_type_income))
+						}
+					)
+				}
+			)
+		}
+	)
 }
 
 @Composable

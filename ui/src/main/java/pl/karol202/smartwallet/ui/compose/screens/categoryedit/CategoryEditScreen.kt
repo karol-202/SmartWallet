@@ -23,6 +23,7 @@ import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
+import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidCategoryEditViewModel
 import java.util.*
 
@@ -130,21 +131,32 @@ private fun CategoryEditScreenContent(category: CategoryEditViewData,
 private fun CategoryTypeSelector(type: CategoryTypeViewData,
                                  setType: (CategoryTypeViewData) -> Unit)
 {
-	Row(
-		modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-		horizontalArrangement = Arrangement.spacedBy(16.dp)
-	) {
-		RadioButtonWithText(
-			text = stringResource(R.string.category_type_expense),
-			selected = type == CategoryTypeViewData.EXPENSE,
-			onClick = { setType(CategoryTypeViewData.EXPENSE) }
-		)
-		RadioButtonWithText(
-			text = stringResource(R.string.category_type_income),
-			selected = type == CategoryTypeViewData.INCOME,
-			onClick = { setType(CategoryTypeViewData.INCOME) }
-		)
-	}
+	Box(
+		modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 24.dp, vertical = 16.dp),
+		contentAlignment = Alignment.Center,
+		content = {
+			ToggleButtonGroup(
+				content = {
+					item(
+						checked = type == CategoryTypeViewData.EXPENSE,
+						onClick = { setType(CategoryTypeViewData.EXPENSE) },
+						content = {
+							Text(text = stringResource(R.string.category_type_expense))
+						}
+					)
+					item(
+						checked = type == CategoryTypeViewData.INCOME,
+						onClick = { setType(CategoryTypeViewData.INCOME) },
+						content = {
+							Text(text = stringResource(R.string.category_type_income))
+						}
+					)
+				}
+			)
+		}
+	)
 }
 
 @Composable
