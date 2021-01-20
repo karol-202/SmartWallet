@@ -19,6 +19,7 @@
     <string name="text_category_edit_name">Name</string>
     <string name="text_category_edit_subcategories">Subcategories</string>
     <string name="text_subcategory_edit_name">Name</string>
+    <string name="text_subcategory_edit_category">Category</string>
     <string name="text_dialog_remove">Remove</string>
     <string name="text_dialog_cancel">Cancel</string>
 

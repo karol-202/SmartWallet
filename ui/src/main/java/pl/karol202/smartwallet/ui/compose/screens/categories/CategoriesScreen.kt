@@ -27,7 +27,7 @@ fun CategoriesScreen(categoriesViewModel: AndroidCategoriesViewModel,
                      onCategoryCreate: () -> Unit,
                      onCategoryEdit: (String) -> Unit)
 {
-	val allCategories by categoriesViewModel.allCategories.collectAsState()
+	val allCategories by categoriesViewModel.allCategories.collectAsState(emptyList())
 
 	Scaffold(
 		scaffoldState = scaffoldState,

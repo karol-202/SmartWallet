@@ -27,7 +27,7 @@ fun TransactionsScreen(transactionsViewModel: AndroidTransactionsViewModel,
                        onTransactionCreate: () -> Unit,
                        onTransactionEdit: (String) -> Unit)
 {
-	val allTransactions by transactionsViewModel.allTransactions.collectAsState()
+	val allTransactions by transactionsViewModel.allTransactions.collectAsState(emptyList())
 
 	Scaffold(
 		scaffoldState = scaffoldState,

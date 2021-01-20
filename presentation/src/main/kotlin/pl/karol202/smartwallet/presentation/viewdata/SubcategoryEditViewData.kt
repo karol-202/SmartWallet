@@ -9,6 +9,8 @@ data class SubcategoryEditViewData(val categoryId: String,
                                    val name: String)
 {
 	fun withName(name: String) = copy(name = name)
+
+	fun withCategory(categoryId: String) = copy(categoryId = categoryId)
 }
 
 fun Subcategory<Existing>.toEditViewData() = SubcategoryEditViewData(categoryId, name)

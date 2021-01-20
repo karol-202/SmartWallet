@@ -12,9 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collect
+import pl.karol202.smartwallet.presentation.viewdata.CategoryItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.SubcategoryEditViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
+import pl.karol202.smartwallet.ui.compose.view.ExposedDropdownMenu
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidSubcategoryEditViewModel
 
@@ -32,6 +34,7 @@ fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewMo
 		subcategoryEditViewModel.finishEvent.collect { onNavigateBack() }
 	}
 
+	val allCategories by subcategoryEditViewModel.allCategories.collectAsState(emptyList())
 	val editedSubcategory = subcategoryEditViewModel.editedSubcategory.collectAsState(null).value ?: return
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
@@ -53,8 +56,9 @@ fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewMo
 		},
 		bodyContent = {
 			SubcategoryEditScreenContent(
+				categories = allCategories,
 				subcategory = editedSubcategory,
-				setSubcategory = { subcategoryEditViewModel.setSubcategory(it) }
+				setSubcategory = { subcategoryEditViewModel.setSubcategory(it) },
 			)
 		},
 	)
@@ -88,13 +92,19 @@ fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
 }
 
 @Composable
-private fun SubcategoryEditScreenContent(subcategory: SubcategoryEditViewData,
+private fun SubcategoryEditScreenContent(categories: List<CategoryItemViewData>,
+                                         subcategory: SubcategoryEditViewData,
                                          setSubcategory: (SubcategoryEditViewData) -> Unit)
 {
 	Column {
 		SubcategoryName(
 			name = subcategory.name,
 			setName = { setSubcategory(subcategory.withName(it)) }
+		)
+		SubcategoryCategory(
+			categories = categories,
+			categoryId = subcategory.categoryId,
+			setCategory = { setSubcategory(subcategory.withCategory(it)) }
 		)
 	}
 }
@@ -108,9 +118,43 @@ private fun SubcategoryName(name: String,
 		onValueChange = setName,
 		modifier = Modifier
 				.fillMaxWidth()
-				.padding(start = 24.dp, end = 24.dp, top = 16.dp),
+				.padding(horizontal = 24.dp, vertical = 8.dp),
 		label = {
 			Text(text = stringResource(R.string.text_subcategory_edit_name))
+		}
+	)
+}
+
+@Composable
+private fun SubcategoryCategory(categories: List<CategoryItemViewData>,
+                                categoryId: String,
+                                setCategory: (String) -> Unit)
+{
+	val (isOpen, setOpen) = remember { mutableStateOf(false) }
+
+	ExposedDropdownMenu(
+		selectedValue = categories.find { it.id == categoryId }?.name ?: "",
+		isOpen = isOpen,
+		onOpenChange = setOpen,
+		modifier = Modifier
+				.padding(horizontal = 24.dp, vertical = 8.dp),
+		textFieldModifier = Modifier
+				.fillMaxWidth(),
+		label = {
+			Text(text = stringResource(R.string.text_subcategory_edit_category))
+		},
+		content = {
+			categories.forEach {
+				DropdownMenuItem(
+					onClick = {
+						setCategory(it.id)
+						setOpen(false)
+					},
+					content = {
+						Text(text = it.name)
+					}
+				)
+			}
 		}
 	)
 }

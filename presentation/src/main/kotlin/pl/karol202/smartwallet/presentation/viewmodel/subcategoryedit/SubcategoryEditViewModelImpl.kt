@@ -1,8 +1,9 @@
 package pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import pl.karol202.smartwallet.domain.entity.Category
+import pl.karol202.smartwallet.domain.entity.Existing
+import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesFlowUseCase
 import pl.karol202.smartwallet.interactors.usecases.subcategory.*
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
@@ -10,7 +11,8 @@ import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
 class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcategoryUseCase,
                                    private val addSubcategoryUseCase: AddSubcategoryUseCase,
                                    private val updateSubcategoryUseCase: UpdateSubcategoryUseCase,
-                                   private val removeSubcategoryUseCase: RemoveSubcategoryUseCase) :
+                                   private val removeSubcategoryUseCase: RemoveSubcategoryUseCase,
+                                   private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase) :
 		BaseViewModel(), SubcategoryEditViewModel
 {
 	sealed class EditState
@@ -37,6 +39,9 @@ class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcate
 
 		abstract fun withSubcategory(subcategory: SubcategoryEditViewData): EditState
 	}
+
+	override val allCategories = getCategoriesFlowUseCase()
+			.map { it.map(Category<Existing>::toItemViewData) }
 
 	private val editState = MutableStateFlow<EditState>(EditState.Idle)
 	override val editedSubcategory = editState.map { it.subcategory }

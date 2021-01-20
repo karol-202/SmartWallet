@@ -1,8 +1,6 @@
 package pl.karol202.smartwallet.presentation.viewmodel.categories
 
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import pl.karol202.smartwallet.domain.entity.Category
 import pl.karol202.smartwallet.domain.entity.Existing
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesFlowUseCase
@@ -14,5 +12,4 @@ class CategoriesViewModelImpl(getCategoriesFlowUseCase: GetCategoriesFlowUseCase
 {
 	override val allCategories = getCategoriesFlowUseCase()
 			.map { it.map(Category<Existing>::toItemViewData) }
-			.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 }
