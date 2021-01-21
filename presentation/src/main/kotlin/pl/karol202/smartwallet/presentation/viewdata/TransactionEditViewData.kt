@@ -8,28 +8,34 @@ import java.time.LocalDate
 
 sealed class TransactionEditViewData
 {
-	data class Expense(override val date: LocalDate,
+	data class Expense(override val subcategoryId: String,
+	                   override val date: LocalDate,
 	                   val amount: Double) : TransactionEditViewData()
 	{
 		override val type = TransactionTypeViewData.EXPENSE
 
 		override fun toExpense() = this
 
-		override fun toIncome() = Income(date, amount)
+		override fun toIncome() = Income(subcategoryId, date, amount)
+
+		override fun withSubcategoryId(subcategoryId: String) = copy(subcategoryId = subcategoryId)
 
 		override fun withDate(date: LocalDate) = copy(date = date)
 
 		fun withAmount(amount: Double) = copy(amount = amount)
 	}
 
-	data class Income(override val date: LocalDate,
+	data class Income(override val subcategoryId: String,
+	                  override val date: LocalDate,
 	                  val amount: Double) : TransactionEditViewData()
 	{
 		override val type = TransactionTypeViewData.INCOME
 
-		override fun toExpense() = Expense(date, amount)
+		override fun toExpense() = Expense(subcategoryId, date, amount)
 
 		override fun toIncome() = this
+
+		override fun withSubcategoryId(subcategoryId: String) = copy(subcategoryId = subcategoryId)
 
 		override fun withDate(date: LocalDate) = copy(date = date)
 
@@ -37,29 +43,32 @@ sealed class TransactionEditViewData
 	}
 
 	abstract val type: TransactionTypeViewData
+	abstract val subcategoryId: String
 	abstract val date: LocalDate
 
 	abstract fun toExpense(): Expense
 
 	abstract fun toIncome(): Income
 
+	abstract fun withSubcategoryId(subcategoryId: String): TransactionEditViewData
+
 	abstract fun withDate(date: LocalDate): TransactionEditViewData
 }
 
 fun Transaction<Existing>.toEditViewData() = when(this)
 {
-	is Transaction.Expense -> TransactionEditViewData.Expense(date, amount)
-	is Transaction.Income -> TransactionEditViewData.Income(date, amount)
+	is Transaction.Expense -> TransactionEditViewData.Expense(subcategoryId, date, amount)
+	is Transaction.Income -> TransactionEditViewData.Income(subcategoryId, date, amount)
 }
 
 fun TransactionEditViewData.toEntity() = when(this)
 {
-	is TransactionEditViewData.Expense -> Transaction.Expense(New, TODO(), date, amount)
-	is TransactionEditViewData.Income -> Transaction.Income(New, TODO(), date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(New, subcategoryId, date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(New, subcategoryId, date, amount)
 }
 
 fun TransactionEditViewData.toEntity(id: String) = when(this)
 {
-	is TransactionEditViewData.Expense -> Transaction.Expense(id.asId(), TODO(), date, amount)
-	is TransactionEditViewData.Income -> Transaction.Income(id.asId(), TODO(), date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(id.asId(), subcategoryId, date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(id.asId(), subcategoryId, date, amount)
 }

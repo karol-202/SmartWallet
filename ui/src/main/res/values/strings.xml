@@ -17,6 +17,7 @@
     <string name="dialog_subcategory_remove_title">Do you want to remove subcategory %s?</string>
 
     <string name="text_transaction_edit_amount">Amount</string>
+    <string name="text_transaction_edit_subcategory">Subcategory</string>
     <string name="text_category_edit_name">Name</string>
     <string name="text_category_edit_subcategories">Subcategories</string>
     <string name="text_subcategory_edit_name">Name</string>

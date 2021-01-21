@@ -16,15 +16,14 @@ import androidx.compose.ui.focus.onFocusChanged
 
 @Composable
 fun ExposedDropdownMenu(selectedValue: String,
-                        isOpen: Boolean,
-                        onOpenChange: (Boolean) -> Unit,
                         modifier: Modifier,
                         textFieldModifier: Modifier,
                         label: @Composable () -> Unit,
-                        content: @Composable () -> Unit)
+                        content: ExposedDropdownScope.() -> Unit)
 {
 	val focusRequester = remember { FocusRequester() }
 	var isFocused by remember { mutableStateOf(false) }
+	var isOpen by remember { mutableStateOf(false) }
 
 	Box(modifier = modifier) {
 		DropdownMenu(
@@ -48,16 +47,63 @@ fun ExposedDropdownMenu(selectedValue: String,
 				)
 			},
 			expanded = isOpen,
-			onDismissRequest = { onOpenChange(false) },
-			dropdownContent = { content() }
+			onDismissRequest = { isOpen = false },
+			dropdownContent = {
+				val scope = ExposedDropdownScopeImpl().also(content)
+				scope.items.forEach {
+					when(it)
+					{
+						is ExposedDropdownItem.Standard -> DropdownMenuItem(
+							enabled = it.enabled,
+							onClick = {
+								it.onClick { isOpen = false }
+							},
+							content = it.content
+						)
+						is ExposedDropdownItem.Custom -> it.content()
+					}
+				}
+			}
 		)
 		Spacer(
 			modifier = Modifier
 					.matchParentSize()
 					.clickable {
-						onOpenChange(true)
+						isOpen = true
 						focusRequester.requestFocus()
 					}
 		)
+	}
+}
+
+interface ExposedDropdownScope
+{
+	fun item(enabled: Boolean = true, onClick: (closeDrawer: () -> Unit) -> Unit = {}, content: @Composable () -> Unit)
+
+	fun custom(content: @Composable () -> Unit)
+}
+
+private sealed class ExposedDropdownItem
+{
+	data class Standard(val enabled: Boolean,
+	                    val onClick: (closeDrawer: () -> Unit) -> Unit,
+	                    val content: @Composable () -> Unit) : ExposedDropdownItem()
+
+	data class Custom(val content: @Composable () -> Unit) : ExposedDropdownItem()
+}
+
+private class ExposedDropdownScopeImpl : ExposedDropdownScope
+{
+	var items = emptyList<ExposedDropdownItem>()
+		private set
+
+	override fun item(enabled: Boolean, onClick: (closeDrawer: () -> Unit) -> Unit, content: @Composable () -> Unit)
+	{
+		items = items + ExposedDropdownItem.Standard(enabled, onClick, content)
+	}
+
+	override fun custom(content: @Composable () -> Unit)
+	{
+		items = items + ExposedDropdownItem.Custom(content)
 	}
 }

@@ -166,12 +166,8 @@ private fun SubcategoryCategory(categories: List<CategoryItemViewData>,
                                 categoryId: String,
                                 setCategory: (String) -> Unit)
 {
-	val (isOpen, setOpen) = remember { mutableStateOf(false) }
-
 	ExposedDropdownMenu(
 		selectedValue = categories.find { it.id == categoryId }?.name ?: "",
-		isOpen = isOpen,
-		onOpenChange = setOpen,
 		modifier = Modifier
 				.padding(horizontal = 24.dp, vertical = 8.dp),
 		textFieldModifier = Modifier
@@ -181,10 +177,10 @@ private fun SubcategoryCategory(categories: List<CategoryItemViewData>,
 		},
 		content = {
 			categories.forEach {
-				DropdownMenuItem(
-					onClick = {
+				item(
+					onClick = { closeDrawer ->
 						setCategory(it.id)
-						setOpen(false)
+						closeDrawer()
 					},
 					content = {
 						Text(text = it.name)

@@ -13,12 +13,14 @@ import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.datepicker
 import kotlinx.coroutines.flow.collect
+import pl.karol202.smartwallet.presentation.viewdata.CategoryWithSubcategoriesItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
+import pl.karol202.smartwallet.ui.compose.view.ExposedDropdownMenu
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidTransactionEditViewModel
@@ -39,6 +41,7 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 		transactionEditViewModel.finishEvent.collect { onNavigateBack() }
 	}
 
+	val allCategories by transactionEditViewModel.allCategories.collectAsState(emptyList())
 	val editedTransaction = transactionEditViewModel.editedTransaction.collectAsState(null).value ?: return
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
@@ -66,7 +69,8 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 			TransactionEditScreenContent(
 				transaction = editedTransaction,
 				setTransactionType = { transactionEditViewModel.setTransactionType(it) },
-				setTransaction = { transactionEditViewModel.setTransaction(it) }
+				setTransaction = { transactionEditViewModel.setTransaction(it) },
+				categories = allCategories
 			)
 		},
 	)
@@ -117,7 +121,8 @@ fun TransactionEditScreenAppbar(transactionExists: Boolean,
 @Composable
 private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
                                          setTransactionType: (TransactionTypeViewData) -> Unit,
-                                         setTransaction: (TransactionEditViewData) -> Unit)
+                                         setTransaction: (TransactionEditViewData) -> Unit,
+                                         categories: List<CategoryWithSubcategoriesItemViewData>)
 {
 	Column {
 		TransactionTypeSelector(
@@ -128,11 +133,13 @@ private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
 		{
 			is Expense -> TransactionDetailsExpense(
 				transaction = transaction,
-				setTransaction = setTransaction
+				setTransaction = setTransaction,
+				categories = categories
 			)
 			is Income -> TransactionDetailsIncome(
 				transaction = transaction,
-				setTransaction = setTransaction
+				setTransaction = setTransaction,
+				categories = categories
 			)
 		}
 	}
@@ -172,37 +179,49 @@ private fun TransactionTypeSelector(transaction: TransactionEditViewData,
 
 @Composable
 private fun TransactionDetailsExpense(transaction: Expense,
-                                      setTransaction: (TransactionEditViewData) -> Unit)
+                                      setTransaction: (TransactionEditViewData) -> Unit,
+                                      categories: List<CategoryWithSubcategoriesItemViewData>)
 {
 	TransactionAmount(
 		initialValue = transaction.amount,
-		onChange = { setTransaction(transaction.withAmount(it)) },
+		setAmount = { setTransaction(transaction.withAmount(it)) },
 		transactionType = transaction.type
+	)
+	TransactionSubcategory(
+		categories = categories,
+		subcategoryId = transaction.subcategoryId,
+		setSubcategoryId = { setTransaction(transaction.withSubcategoryId(it)) }
 	)
 	TransactionDate(
 		date = transaction.date,
-		onChange = { setTransaction(transaction.withDate(it)) }
+		setDate = { setTransaction(transaction.withDate(it)) }
 	)
 }
 
 @Composable
 private fun TransactionDetailsIncome(transaction: Income,
-                                     setTransaction: (TransactionEditViewData) -> Unit)
+                                     setTransaction: (TransactionEditViewData) -> Unit,
+                                     categories: List<CategoryWithSubcategoriesItemViewData>)
 {
 	TransactionAmount(
 		initialValue = transaction.amount,
-		onChange = { setTransaction(transaction.withAmount(it)) },
+		setAmount = { setTransaction(transaction.withAmount(it)) },
 		transactionType = transaction.type
+	)
+	TransactionSubcategory(
+		categories = categories,
+		subcategoryId = transaction.subcategoryId,
+		setSubcategoryId = { setTransaction(transaction.withSubcategoryId(it)) }
 	)
 	TransactionDate(
 		date = transaction.date,
-		onChange = { setTransaction(transaction.withDate(it)) }
+		setDate = { setTransaction(transaction.withDate(it)) }
 	)
 }
 
 @Composable
 private fun TransactionAmount(initialValue: Double,
-                              onChange: (Double) -> Unit,
+                              setAmount: (Double) -> Unit,
                               transactionType: TransactionTypeViewData)
 {
 	var value by remember { mutableStateOf(initialValue.toString()) }
@@ -217,7 +236,7 @@ private fun TransactionAmount(initialValue: Double,
 		value = value,
 		onValueChange = {
 			value = it
-			it.toDoubleOrNull()?.let(onChange)
+			it.toDoubleOrNull()?.let(setAmount)
 		},
 		modifier = Modifier
 				.fillMaxWidth()
@@ -235,15 +254,48 @@ private fun TransactionAmount(initialValue: Double,
 }
 
 @Composable
+private fun TransactionSubcategory(categories: List<CategoryWithSubcategoriesItemViewData>,
+                                   subcategoryId: String,
+                                   setSubcategoryId: (String) -> Unit)
+{
+	ExposedDropdownMenu(
+		selectedValue = categories.flatMap { it.subcategories }.find { it.id == subcategoryId }?.name ?: "",
+		modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+		textFieldModifier = Modifier.fillMaxWidth(),
+		label = {
+			Text(text = stringResource(R.string.text_transaction_edit_subcategory))
+		},
+		content = {
+			categories.forEach { (category, subcategories) ->
+				custom {
+					Text(text = category.name)
+				}
+				subcategories.forEach { subcategory ->
+					item(
+						onClick = { closeDrawer ->
+							setSubcategoryId(subcategory.id)
+							closeDrawer()
+						},
+						content = {
+							Text(text = subcategory.name)
+						}
+					)
+				}
+			}
+		}
+	)
+}
+
+@Composable
 private fun TransactionDate(date: LocalDate,
-                            onChange: (LocalDate) -> Unit)
+                            setDate: (LocalDate) -> Unit)
 {
 	val dateDialog = MaterialDialog()
 
 	dateDialog.build {
 		datepicker(
 			initialDate = date,
-			onComplete = onChange
+			onComplete = setDate
 		)
 	}
 

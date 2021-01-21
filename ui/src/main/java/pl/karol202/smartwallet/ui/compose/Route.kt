@@ -68,7 +68,7 @@ sealed class Routes : Route
 		override val args = listOf(navArgument(ARG_CATEGORY_ID) { type = NavType.StringType })
 
 		fun constructRoute(categoryId: String) =
-				"subcategoryEdit" + constructQueryParams(ARG_CATEGORY_ID to categoryId)
+				"subcategoryNew" + constructQueryParams(ARG_CATEGORY_ID to categoryId)
 	}
 
 	object SubcategoryEditExisting : Routes()
