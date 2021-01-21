@@ -54,12 +54,12 @@ fun Transaction<Existing>.toEditViewData() = when(this)
 
 fun TransactionEditViewData.toEntity() = when(this)
 {
-	is TransactionEditViewData.Expense -> Transaction.Expense(New, date, amount)
-	is TransactionEditViewData.Income -> Transaction.Income(New, date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(New, TODO(), date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(New, TODO(), date, amount)
 }
 
 fun TransactionEditViewData.toEntity(id: String) = when(this)
 {
-	is TransactionEditViewData.Expense -> Transaction.Expense(id.asId(), date, amount)
-	is TransactionEditViewData.Income -> Transaction.Income(id.asId(), date, amount)
+	is TransactionEditViewData.Expense -> Transaction.Expense(id.asId(), TODO(), date, amount)
+	is TransactionEditViewData.Income -> Transaction.Income(id.asId(), TODO(), date, amount)
 }

@@ -100,20 +100,13 @@ fun TransactionsList(transactions: List<TransactionItemViewData>,
 fun TransactionItem(transaction: TransactionItemViewData,
                     onEdit: () -> Unit)
 {
-	Row(
-		modifier = Modifier
-				.fillMaxWidth()
-				.clickable(onClick = {})
-				.padding(start = 24.dp, end = 8.dp),
-		horizontalArrangement = Arrangement.SpaceBetween,
-		verticalAlignment = Alignment.CenterVertically
-	) {
-		Text(text = transaction.amount.toString())
-		IconButton(
-			onClick = onEdit,
-			content = {
-				Icon(Icons.Filled.Edit)
-			}
-		)
-	}
+	ListItem(
+		modifier = Modifier.clickable(onClick = onEdit),
+		text = {
+			Text(text = transaction.subcategory.name)
+		},
+		trailing = {
+			Text(text = transaction.amount.toString())
+		}
+	)
 }

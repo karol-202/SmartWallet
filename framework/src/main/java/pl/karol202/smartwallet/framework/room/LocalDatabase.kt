@@ -13,7 +13,7 @@ import pl.karol202.smartwallet.framework.room.entity.SubcategoryRoomEntity
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 private const val DATABASE_NAME = "smartwallet.local"
-private const val DATABASE_VERSION = 4
+private const val DATABASE_VERSION = 5
 
 @Database(entities = [TransactionRoomEntity::class, CategoryRoomEntity::class, SubcategoryRoomEntity::class],
           version = DATABASE_VERSION,

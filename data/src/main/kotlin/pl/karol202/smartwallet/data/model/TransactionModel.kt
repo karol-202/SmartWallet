@@ -9,31 +9,34 @@ import java.time.LocalDate
 sealed class TransactionModel
 {
 	data class Expense(override val id: String,
+	                   override val subcategoryId: String,
 	                   override val date: LocalDate,
 	                   val amount: Double) : TransactionModel()
 
 	data class Income(override val id: String,
+	                  override val subcategoryId: String,
 	                  override val date: LocalDate,
 	                  val amount: Double) : TransactionModel()
 
 	abstract val id: String
+	abstract val subcategoryId: String
 	abstract val date: LocalDate
 }
 
 fun Transaction<New>.toModel(newId: String) = when(this)
 {
-	is Transaction.Expense -> TransactionModel.Expense(newId, date, amount)
-	is Transaction.Income -> TransactionModel.Income(newId, date, amount)
+	is Transaction.Expense -> TransactionModel.Expense(newId, subcategoryId, date, amount)
+	is Transaction.Income -> TransactionModel.Income(newId, subcategoryId, date, amount)
 }
 
 fun Transaction<Existing>.toModel() = when(this)
 {
-	is Transaction.Expense -> TransactionModel.Expense(id.value, date, amount)
-	is Transaction.Income -> TransactionModel.Income(id.value, date, amount)
+	is Transaction.Expense -> TransactionModel.Expense(id.value, subcategoryId, date, amount)
+	is Transaction.Income -> TransactionModel.Income(id.value, subcategoryId, date, amount)
 }
 
 fun TransactionModel.toEntity() = when(this)
 {
-	is TransactionModel.Expense -> Transaction.Expense(id.asId(), date, amount)
-	is TransactionModel.Income -> Transaction.Income(id.asId(), date, amount)
+	is TransactionModel.Expense -> Transaction.Expense(id.asId(), subcategoryId, date, amount)
+	is TransactionModel.Income -> Transaction.Income(id.asId(), subcategoryId, date, amount)
 }
