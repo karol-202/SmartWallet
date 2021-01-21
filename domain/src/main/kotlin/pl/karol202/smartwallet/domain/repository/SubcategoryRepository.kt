@@ -1,12 +1,15 @@
 package pl.karol202.smartwallet.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import pl.karol202.smartwallet.domain.entity.Category
 import pl.karol202.smartwallet.domain.entity.Existing
 import pl.karol202.smartwallet.domain.entity.New
 import pl.karol202.smartwallet.domain.entity.Subcategory
 
 interface SubcategoryRepository
 {
+	val allSubcategories: Flow<List<Subcategory<Existing>>>
+
 	fun getSubcategory(subcategoryId: String): Flow<Subcategory<Existing>?>
 
 	fun getSubcategoriesOfCategory(categoryId: String): Flow<List<Subcategory<Existing>>>

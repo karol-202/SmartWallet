@@ -60,17 +60,26 @@ sealed class Routes : Route
 				"categoryEdit" + constructQueryParams(ARG_CATEGORY_ID to categoryId)
 	}
 
-	object SubcategoryEdit : Routes()
+	object SubcategoryEditNew : Routes()
 	{
 		const val ARG_CATEGORY_ID = "categoryId"
+
+		override val route = "subcategoryNew?$ARG_CATEGORY_ID={$ARG_CATEGORY_ID}"
+		override val args = listOf(navArgument(ARG_CATEGORY_ID) { type = NavType.StringType })
+
+		fun constructRoute(categoryId: String) =
+				"subcategoryEdit" + constructQueryParams(ARG_CATEGORY_ID to categoryId)
+	}
+
+	object SubcategoryEditExisting : Routes()
+	{
 		const val ARG_SUBCATEGORY_ID = "subcategoryId"
 
-		override val route = "categories/{$ARG_CATEGORY_ID}/subcategoryEdit?$ARG_SUBCATEGORY_ID={$ARG_SUBCATEGORY_ID}"
-		override val args = listOf(navArgument(ARG_CATEGORY_ID) { type = NavType.StringType; nullable = true },
-		                           navArgument(ARG_SUBCATEGORY_ID) { type = NavType.StringType; nullable = true })
+		override val route = "subcategoryEdit?$ARG_SUBCATEGORY_ID={$ARG_SUBCATEGORY_ID}"
+		override val args = listOf(navArgument(ARG_SUBCATEGORY_ID) { type = NavType.StringType })
 
-		fun constructRoute(categoryId: String, subcategoryId: String? = null) =
-				"categories/$categoryId/subcategoryEdit" + constructQueryParams(ARG_SUBCATEGORY_ID to subcategoryId)
+		fun constructRoute(subcategoryId: String) =
+				"subcategoryEdit" + constructQueryParams(ARG_SUBCATEGORY_ID to subcategoryId)
 	}
 
 	@GenSealedEnum

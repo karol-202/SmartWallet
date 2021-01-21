@@ -22,15 +22,42 @@ import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidSubcategoryEditViewModel
 
 @Composable
-fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewModel,
-                          categoryId: String,
-                          subcategoryId: String?,
-                          onNavigateBack: () -> Unit)
+fun SubcategoryEditScreenNew(subcategoryEditViewModel: AndroidSubcategoryEditViewModel,
+                             categoryId: String,
+                             onNavigateBack: () -> Unit)
+{
+	LaunchedEffect(subcategoryEditViewModel) {
+		subcategoryEditViewModel.editNewSubcategory(categoryId)
+	}
+
+	SubcategoryEditScreenInternal(
+		subcategoryEditViewModel = subcategoryEditViewModel,
+		subcategoryExists = false,
+		onNavigateBack = onNavigateBack
+	)
+}
+
+@Composable
+fun SubcategoryEditScreenExisting(subcategoryEditViewModel: AndroidSubcategoryEditViewModel,
+                                  subcategoryId: String,
+                                  onNavigateBack: () -> Unit)
 {
 	LaunchedEffect(subcategoryEditViewModel, subcategoryId) {
-		if(subcategoryId == null) subcategoryEditViewModel.editNewSubcategory(categoryId)
-		else subcategoryEditViewModel.editExistingSubcategory(subcategoryId)
+		subcategoryEditViewModel.editExistingSubcategory(subcategoryId)
 	}
+
+	SubcategoryEditScreenInternal(
+		subcategoryEditViewModel = subcategoryEditViewModel,
+		subcategoryExists = true,
+		onNavigateBack = onNavigateBack
+	)
+}
+
+@Composable
+private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubcategoryEditViewModel,
+                                          subcategoryExists: Boolean,
+                                          onNavigateBack: () -> Unit)
+{
 	LaunchedEffect(subcategoryEditViewModel) {
 		subcategoryEditViewModel.finishEvent.collect { onNavigateBack() }
 	}
@@ -43,7 +70,7 @@ fun SubcategoryEditScreen(subcategoryEditViewModel: AndroidSubcategoryEditViewMo
 	Scaffold(
 		topBar = {
 			SubcategoryEditScreenAppbar(
-				subcategoryExists = subcategoryId != null,
+				subcategoryExists = subcategoryExists,
 				onNavigateBack = onNavigateBack,
 				onRemove = { removeDialogVisible = true }
 			)

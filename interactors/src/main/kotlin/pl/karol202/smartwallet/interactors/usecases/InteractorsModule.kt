@@ -13,6 +13,7 @@ fun interactorsModule() = module {
 	single { removeTransactionUseCaseFactory(get()) }
 
 	single { getCategoriesFlowUseCaseFactory(get()) }
+	single { getCategoriesWithSubcategoriesFlowUseCaseFactory(get(), get()) }
 	single { getCategoryUseCaseFactory(get()) }
 	single { addCategoryUseCaseFactory(get()) }
 	single { updateCategoryUseCaseFactory(get()) }

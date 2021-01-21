@@ -10,6 +10,8 @@ import pl.karol202.smartwallet.framework.room.entity.toRoomEntity
 
 class RoomSubcategoryDataSource(private val subcategoryDao: SubcategoryDao) : SubcategoryDataSource
 {
+	override val allSubcategories = subcategoryDao.getAll().map { it.map(SubcategoryRoomEntity::toModel) }
+
 	override fun getSubcategory(subcategoryId: String) =
 			subcategoryDao.getById(subcategoryId).map { it?.toModel() }
 

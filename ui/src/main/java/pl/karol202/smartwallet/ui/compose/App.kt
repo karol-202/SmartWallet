@@ -8,12 +8,15 @@ import androidx.compose.runtime.ambientOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
 import pl.karol202.smartwallet.ui.compose.screens.categoryedit.CategoryEditScreen
-import pl.karol202.smartwallet.ui.compose.screens.subcategoryedit.SubcategoryEditScreen
+import pl.karol202.smartwallet.ui.compose.screens.subcategoryedit.SubcategoryEditScreenExisting
+import pl.karol202.smartwallet.ui.compose.screens.subcategoryedit.SubcategoryEditScreenNew
 import pl.karol202.smartwallet.ui.compose.screens.transactionedit.TransactionEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.transactions.TransactionsScreen
 import pl.karol202.smartwallet.ui.compose.theme.AppTheme
@@ -87,6 +90,9 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
 					},
 					onCategoryEdit = { categoryId ->
 						onNavigate(Routes.CategoryEdit.constructRoute(categoryId))
+					},
+					onSubategoryEdit = { subcategoryId ->
+						onNavigate(Routes.SubcategoryEditExisting.constructRoute(subcategoryId))
 					}
 				)
 			Routes.CategoryEdit ->
@@ -95,17 +101,22 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
 					categoryId = navEntry.getStringArgument(Routes.CategoryEdit.ARG_CATEGORY_ID),
 					onNavigateBack = onNavigateBack,
 					onSubcategoryCreate = { categoryId ->
-						onNavigate(Routes.SubcategoryEdit.constructRoute(categoryId))
+						onNavigate(Routes.SubcategoryEditNew.constructRoute(categoryId))
 					},
-					onSubcategoryEdit = { categoryId, subcategoryId ->
-						onNavigate(Routes.SubcategoryEdit.constructRoute(categoryId, subcategoryId))
+					onSubcategoryEdit = { subcategoryId ->
+						onNavigate(Routes.SubcategoryEditExisting.constructRoute(subcategoryId))
 					}
 				)
-			Routes.SubcategoryEdit ->
-				SubcategoryEditScreen(
+			Routes.SubcategoryEditNew ->
+				SubcategoryEditScreenNew(
 					subcategoryEditViewModel = getViewModel(),
-					categoryId = navEntry.requireStringArgument(Routes.SubcategoryEdit.ARG_CATEGORY_ID),
-					subcategoryId = navEntry.getStringArgument(Routes.SubcategoryEdit.ARG_SUBCATEGORY_ID),
+					categoryId = navEntry.requireStringArgument(Routes.SubcategoryEditNew.ARG_CATEGORY_ID),
+					onNavigateBack = onNavigateBack
+				)
+			Routes.SubcategoryEditExisting ->
+				SubcategoryEditScreenExisting(
+					subcategoryEditViewModel = getViewModel(),
+					subcategoryId = navEntry.requireStringArgument(Routes.SubcategoryEditExisting.ARG_SUBCATEGORY_ID),
 					onNavigateBack = onNavigateBack
 				)
 		}

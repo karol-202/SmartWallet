@@ -29,7 +29,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
                        categoryId: String?,
                        onNavigateBack: () -> Unit,
                        onSubcategoryCreate: (categoryId: String) -> Unit,
-                       onSubcategoryEdit: (categoryId: String, subcategoryId: String) -> Unit)
+                       onSubcategoryEdit: (subcategoryId: String) -> Unit)
 {
 	LaunchedEffect(categoryEditViewModel, categoryId) {
 		if(categoryId == null) categoryEditViewModel.editNewCategory()
@@ -68,7 +68,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 				setCategory = { categoryEditViewModel.setCategory(it) },
 				subcategories = subcategories,
 				onSubcategoryCreate = { if(categoryId != null) onSubcategoryCreate(categoryId) },
-				onSubcategoryEdit = { if(categoryId != null) onSubcategoryEdit(categoryId, it) }
+				onSubcategoryEdit = onSubcategoryEdit
 			)
 		},
 	)

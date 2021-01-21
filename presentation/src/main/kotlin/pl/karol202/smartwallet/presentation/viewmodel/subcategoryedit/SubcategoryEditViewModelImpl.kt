@@ -12,7 +12,7 @@ class SubcategoryEditViewModelImpl(private val getSubcategoryUseCase: GetSubcate
                                    private val addSubcategoryUseCase: AddSubcategoryUseCase,
                                    private val updateSubcategoryUseCase: UpdateSubcategoryUseCase,
                                    private val removeSubcategoryUseCase: RemoveSubcategoryUseCase,
-                                   private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase) :
+                                   getCategoriesFlowUseCase: GetCategoriesFlowUseCase) :
 		BaseViewModel(), SubcategoryEditViewModel
 {
 	sealed class EditState

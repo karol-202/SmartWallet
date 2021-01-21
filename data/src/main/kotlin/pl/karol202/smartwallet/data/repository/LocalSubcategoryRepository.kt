@@ -14,6 +14,8 @@ import pl.karol202.smartwallet.domain.repository.SubcategoryRepository
 class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryDataSource,
                                  private val idDataSource: IdDataSource) : SubcategoryRepository
 {
+	override val allSubcategories = subcategoryDataSource.allSubcategories.map { it.map(SubcategoryModel::toEntity) }
+
 	override fun getSubcategory(subcategoryId: String) =
 			subcategoryDataSource.getSubcategory(subcategoryId).map { it?.toEntity() }
 
