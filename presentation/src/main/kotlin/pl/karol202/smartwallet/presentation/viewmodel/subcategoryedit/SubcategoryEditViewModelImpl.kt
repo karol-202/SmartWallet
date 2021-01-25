@@ -3,8 +3,9 @@ package pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit
 import kotlinx.coroutines.flow.*
 import pl.karol202.smartwallet.domain.entity.Category
 import pl.karol202.smartwallet.domain.entity.Existing
-import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesByTypeFlowUseCase
+import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesFlowUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoryUseCase
+import pl.karol202.smartwallet.interactors.usecases.category.filterByType
 import pl.karol202.smartwallet.interactors.usecases.subcategory.*
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
@@ -14,7 +15,7 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
                                    private val addSubcategoryUseCase: AddSubcategoryUseCase,
                                    private val updateSubcategoryUseCase: UpdateSubcategoryUseCase,
                                    private val removeSubcategoryUseCase: RemoveSubcategoryUseCase,
-                                   getCategoriesByTypeFlowUseCase: GetCategoriesByTypeFlowUseCase) :
+                                   getCategoriesFlowUseCase: GetCategoriesFlowUseCase) :
 		BaseViewModel(), SubcategoryEditViewModel
 {
 	sealed class EditState
@@ -22,29 +23,27 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		object Idle : EditState()
 		{
 			override val subcategory: SubcategoryEditViewData? = null
-			override val categoryTypeFilter: Category.Type? = null
+			override val categoryType: Category.Type? = null
 
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = this
 		}
 
 		data class New(override val subcategory: SubcategoryEditViewData) : EditState()
 		{
-			override val categoryTypeFilter: Category.Type? = null
+			override val categoryType: Category.Type? = null
 
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = copy(subcategory = subcategory)
 		}
 
 		data class Existing(val id: String,
 		                    override val subcategory: SubcategoryEditViewData,
-		                    private val category: Category<pl.karol202.smartwallet.domain.entity.Existing>) : EditState()
+		                    override val categoryType: Category.Type) : EditState()
 		{
-			override val categoryTypeFilter = category.type
-
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = copy(subcategory = subcategory)
 		}
 
 		abstract val subcategory: SubcategoryEditViewData?
-		abstract val categoryTypeFilter: Category.Type?
+		abstract val categoryType: Category.Type?
 
 		abstract fun withSubcategory(subcategory: SubcategoryEditViewData): EditState
 	}
@@ -52,7 +51,9 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 	private val editState = MutableStateFlow<EditState>(EditState.Idle)
 	override val editedSubcategory = editState.map { it.subcategory }
 	override val availableCategories = editState
-			.flatMapLatest { getCategoriesByTypeFlowUseCase(it.categoryTypeFilter) }
+			.flatMapLatest { editState ->
+				getCategoriesFlowUseCase { editState.categoryType?.let(this::filterByType) }
+			}
 			.map { it.map(Category<Existing>::toItemViewData) }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
@@ -67,7 +68,7 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		editState.value = EditState.Existing(
 			id = subcategoryId,
 			subcategory = subcategory.toEditViewData(),
-			category = category
+			categoryType = category.type
 		)
 	}
 

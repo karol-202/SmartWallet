@@ -19,9 +19,6 @@ class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryD
 	override fun getSubcategory(subcategoryId: String) =
 			subcategoryDataSource.getSubcategory(subcategoryId).map { it?.toEntity() }
 
-	override fun getSubcategoriesOfCategory(categoryId: String) =
-			subcategoryDataSource.getSubcategoriesOfCategory(categoryId).map { it.map(SubcategoryModel::toEntity) }
-
 	override suspend fun addSubcategory(subcategory: Subcategory<New>) =
 			subcategoryDataSource.addSubcategory(subcategory.toModel(idDataSource.createRandomId()))
 

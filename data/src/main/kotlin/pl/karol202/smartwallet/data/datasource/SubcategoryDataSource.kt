@@ -11,8 +11,6 @@ interface SubcategoryDataSource
 
     fun getSubcategory(subcategoryId: String): Flow<SubcategoryModel?>
 
-    fun getSubcategoriesOfCategory(categoryId: String): Flow<List<SubcategoryModel>>
-
     suspend fun addSubcategory(subcategory: SubcategoryModel)
 
     suspend fun updateSubcategory(subcategory: SubcategoryModel)
