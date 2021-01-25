@@ -9,6 +9,7 @@ import pl.karol202.smartwallet.domain.entity.Transaction
 import pl.karol202.smartwallet.domain.repository.CategoryRepository
 import pl.karol202.smartwallet.domain.repository.SubcategoryRepository
 import pl.karol202.smartwallet.domain.repository.TransactionRepository
+import pl.karol202.smartwallet.interactors.filter.noFilters
 import pl.karol202.smartwallet.interactors.usecases.UseCase0
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesWithSubcategoriesFlowUseCase
 
@@ -23,7 +24,7 @@ fun getTransactionsWithCategoriesFlowUseCaseFactory(
 		transactionRepository: TransactionRepository,
 		getCategoriesWithSubcategoriesFlowUseCase: GetCategoriesWithSubcategoriesFlowUseCase
 ) = GetTransactionsWithCategoriesFlowUseCase {
-	transactionRepository.allTransactions.combine(getCategoriesWithSubcategoriesFlowUseCase()) { transactions, categoriesMap ->
+	transactionRepository.allTransactions.combine(getCategoriesWithSubcategoriesFlowUseCase(noFilters())) { transactions, categoriesMap ->
 		transactions.map { transaction ->
 			val (category, subcategory) = categoriesMap
 					.flatMap { (category, subcategories) -> subcategories.map { category to it } }

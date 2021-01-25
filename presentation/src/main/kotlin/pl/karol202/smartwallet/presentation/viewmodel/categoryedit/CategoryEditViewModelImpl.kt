@@ -52,9 +52,8 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 	override val editedCategory = editState.map { it.category }
 	override val subcategories = editState
 			.flatMapLatest { editState ->
-				editState.id?.let { categoryId ->
-					getSubcategoriesFlowUseCase { filterByCategoryId(categoryId) }
-				} ?: flowOf(null)
+				editState.id?.let { categoryId -> getSubcategoriesFlowUseCase { filterByCategoryId(categoryId) } }
+						?: flowOf(null)
 			}
 			.map { it?.map(Subcategory<Existing>::toItemViewData) }
 	override val finishEvent = MutableSharedFlow<Unit>()

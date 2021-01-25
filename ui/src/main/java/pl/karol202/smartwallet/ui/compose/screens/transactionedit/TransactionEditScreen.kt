@@ -41,7 +41,7 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 		transactionEditViewModel.finishEvent.collect { onNavigateBack() }
 	}
 
-	val allCategories by transactionEditViewModel.allCategories.collectAsState(emptyList())
+	val availableCategories by transactionEditViewModel.availableCategories.collectAsState(emptyList())
 	val editedTransaction = transactionEditViewModel.editedTransaction.collectAsState(null).value ?: return
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
@@ -70,7 +70,7 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 				transaction = editedTransaction,
 				setTransactionType = { transactionEditViewModel.setTransactionType(it) },
 				setTransaction = { transactionEditViewModel.setTransaction(it) },
-				categories = allCategories
+				categories = availableCategories
 			)
 		},
 	)

@@ -1,10 +1,11 @@
 package pl.karol202.smartwallet.presentation.viewmodel.transactionedit
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import pl.karol202.smartwallet.domain.entity.Transaction
+import pl.karol202.smartwallet.interactors.filter.noFilters
+import pl.karol202.smartwallet.interactors.usecases.category.CategoryWithSubcategories
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesWithSubcategoriesFlowUseCase
+import pl.karol202.smartwallet.interactors.usecases.category.filterByTransactionType
 import pl.karol202.smartwallet.interactors.usecases.transaction.AddTransactionUseCase
 import pl.karol202.smartwallet.interactors.usecases.transaction.GetTransactionUseCase
 import pl.karol202.smartwallet.interactors.usecases.transaction.RemoveTransactionUseCase
@@ -25,37 +26,45 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 		object Idle : EditState()
 		{
 			override val transaction: TransactionEditViewData? = null
+			override val transactionAsEntity: Transaction<*>? = null
 
 			override fun withTransaction(transaction: TransactionEditViewData) = this
 		}
 
 		data class New(override val transaction: TransactionEditViewData) : EditState()
 		{
+			override val transactionAsEntity = transaction.toEntity()
+
 			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
 		}
 
 		data class Existing(val id: String,
 		                    override val transaction: TransactionEditViewData) : EditState()
 		{
+			override val transactionAsEntity = transaction.toEntity(id)
+
 			override fun withTransaction(transaction: TransactionEditViewData) = copy(transaction = transaction)
 		}
 
 		abstract val transaction: TransactionEditViewData?
+		abstract val transactionAsEntity: Transaction<*>?
 
 		abstract fun withTransaction(transaction: TransactionEditViewData): EditState
 	}
 
-	override val allCategories = getCategoriesWithSubcategoriesFlowUseCase()
-			.map { it.map { (category, subcategories) -> category.toItemViewData(subcategories) } }
-
 	private val editState = MutableStateFlow<EditState>(EditState.Idle)
 	override val editedTransaction = editState.map { it.transaction }
+	override val availableCategories = editState
+			.flatMapLatest { editState ->
+				getCategoriesWithSubcategoriesFlowUseCase { editState.transactionAsEntity?.let(this::filterByTransactionType) }
+			}
+			.map { it.map(CategoryWithSubcategories::toItemViewData) }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewTransaction() = launch {
 		// TODO Change to Others subcategory as soon as it's introduced
 		// Requires at least one category and one subcategory to exist in order to function
-		val subcategoryId = allCategories.first().first().subcategories.first().id
+		val subcategoryId = availableCategories.first().first().subcategories.first().id
 		editState.value = EditState.New(TransactionEditViewData.Expense(subcategoryId, LocalDate.now(), 0.0))
 	}
 
@@ -66,6 +75,7 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 		)
 	}
 
+	// TODO Change subcategory to Others
 	override fun setTransactionType(type: TransactionTypeViewData)
 	{
 		val current = editState.value.transaction ?: return
@@ -84,8 +94,8 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 	override fun apply() = launch {
 		when(val editState = editState.value)
 		{
-			is EditState.New -> addTransactionUseCase(editState.transaction.toEntity())
-			is EditState.Existing -> updateTransactionUseCase(editState.transaction.toEntity(editState.id))
+			is EditState.New -> addTransactionUseCase(editState.transactionAsEntity)
+			is EditState.Existing -> updateTransactionUseCase(editState.transactionAsEntity)
 		}
 		cancel()
 	}
