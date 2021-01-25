@@ -4,12 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,13 +17,11 @@ import pl.karol202.smartwallet.ui.compose.view.ToggleButtonPosition.*
 
 private const val toggleButtonBackgroundOpacity = 0.2f
 private const val toggleButtonBorderOpacity = 0.3f
+private const val toggleButtonBorderDisabledOpacity = 0.2f
 private val toggleButtonBorderSize = 1.dp
 
 @Composable
 fun ToggleButtonGroup(modifier: Modifier = Modifier,
-                      backgroundColor: Color = MaterialTheme.colors.primary.copy(alpha = toggleButtonBackgroundOpacity),
-                      contentColor: Color = MaterialTheme.colors.primary,
-                      borderColor: Color = MaterialTheme.colors.primary.copy(alpha = toggleButtonBorderOpacity),
                       content: ToggleButtonGroupScope.() -> Unit)
 {
 	val scope = ToggleButtonGroupScopeImpl().also(content)
@@ -39,10 +35,7 @@ fun ToggleButtonGroup(modifier: Modifier = Modifier,
 					0 -> FIRST
 					scope.items.size - 1 -> LAST
 					else -> MIDDLE
-				},
-				backgroundColor = backgroundColor,
-				contentColor = contentColor,
-				borderColor = borderColor
+				}
 			)
 		}
 	}
@@ -55,12 +48,18 @@ enum class ToggleButtonPosition
 
 @Composable
 private fun ToggleButton(item: ToggleButtonGroupItem,
-                         position: ToggleButtonPosition,
-                         backgroundColor: Color,
-                         contentColor: Color,
-                         borderColor: Color)
+                         position: ToggleButtonPosition)
 {
-	val currentBackgroundColor = if(item.checked) backgroundColor else MaterialTheme.colors.surface
+	val currentBackgroundColor =
+			if(item.checked) MaterialTheme.colors.primary.copy(alpha = toggleButtonBackgroundOpacity)
+			else MaterialTheme.colors.surface
+	val currentContentColor =
+			if(item.enabled) MaterialTheme.colors.primary
+			else MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+	val currentBorderColor =
+			if(item.enabled) MaterialTheme.colors.primary.copy(alpha = toggleButtonBorderOpacity)
+			else MaterialTheme.colors.onSurface.copy(alpha = toggleButtonBorderDisabledOpacity)
+
 	val shape = when(position)
 	{
 		FIRST -> MaterialTheme.shapes.small.copy(topRight = CornerSize(0.dp), bottomRight = CornerSize(0.dp))
@@ -69,45 +68,49 @@ private fun ToggleButton(item: ToggleButtonGroupItem,
 	}
 	val border = BorderStroke(
 		width = toggleButtonBorderSize,
-		color = borderColor
+		color = currentBorderColor
 	)
 
 	Surface(
 		modifier = Modifier
 				.clickable(
+					enabled = item.enabled,
 					onClick = item.onClick,
-					indication = rememberRipple(color = backgroundColor)
+					indication = rememberRipple(color = currentBackgroundColor)
 				),
 		color = currentBackgroundColor,
-		contentColor = contentColor,
+		contentColor = currentContentColor,
 		shape = shape,
 		border = border,
 		content = {
-			ProvideTextStyle(
-				value = MaterialTheme.typography.button,
-				content = {
-					Box(
-						modifier = Modifier
-								.defaultMinSizeConstraints(
-									minWidth = ButtonDefaults.MinWidth,
-									minHeight = ButtonDefaults.MinHeight
-								)
-								.padding(ButtonDefaults.ContentPadding),
-						contentAlignment = Alignment.Center,
-						content = { item.content() }
-					)
-				}
-			)
+			Providers(AmbientContentAlpha provides currentContentColor.alpha) {
+				ProvideTextStyle(
+					value = MaterialTheme.typography.button,
+					content = {
+						Box(
+							modifier = Modifier
+									.defaultMinSizeConstraints(
+										minWidth = ButtonDefaults.MinWidth,
+										minHeight = ButtonDefaults.MinHeight
+									)
+									.padding(ButtonDefaults.ContentPadding),
+							contentAlignment = Alignment.Center,
+							content = { item.content() }
+						)
+					}
+				)
+			}
 		}
 	)
 }
 
 interface ToggleButtonGroupScope
 {
-	fun item(checked: Boolean, onClick: () -> Unit, content: @Composable () -> Unit)
+	fun item(checked: Boolean, enabled: Boolean = true, onClick: () -> Unit, content: @Composable () -> Unit)
 }
 
 private data class ToggleButtonGroupItem(val checked: Boolean,
+                                         val enabled: Boolean,
                                          val onClick: () -> Unit,
                                          val content: @Composable () -> Unit)
 
@@ -116,8 +119,8 @@ private class ToggleButtonGroupScopeImpl : ToggleButtonGroupScope
 	var items = emptyList<ToggleButtonGroupItem>()
 		private set
 
-	override fun item(checked: Boolean, onClick: () -> Unit, content: @Composable () -> Unit)
+	override fun item(checked: Boolean, enabled: Boolean, onClick: () -> Unit, content: @Composable () -> Unit)
 	{
-		items = items + ToggleButtonGroupItem(checked, onClick, content)
+		items = items + ToggleButtonGroupItem(checked, enabled, onClick, content)
 	}
 }

@@ -10,8 +10,8 @@ import pl.karol202.smartwallet.presentation.viewmodel.ViewModel
 
 interface SubcategoryEditViewModel : ViewModel
 {
-	val allCategories: Flow<List<CategoryItemViewData>>
 	val editedSubcategory: Flow<SubcategoryEditViewData?>
+	val availableCategories: Flow<List<CategoryItemViewData>>
 	val finishEvent: Flow<Unit>
 
 	fun editNewSubcategory(categoryId: String)

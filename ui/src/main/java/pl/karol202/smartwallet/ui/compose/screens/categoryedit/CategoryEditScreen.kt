@@ -1,5 +1,6 @@
 package pl.karol202.smartwallet.ui.compose.screens.categoryedit
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +19,6 @@ import pl.karol202.smartwallet.presentation.viewdata.CategoryTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.SubcategoryItemViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
-import pl.karol202.smartwallet.ui.compose.view.RadioButtonWithText
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidCategoryEditViewModel
@@ -64,6 +64,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 		},
 		bodyContent = {
 			CategoryEditScreenContent(
+				categoryExists = categoryId != null,
 				category = editedCategory,
 				setCategory = { categoryEditViewModel.setCategory(it) },
 				subcategories = subcategories,
@@ -109,7 +110,8 @@ private fun CategoryEditScreenAppbar(categoryExists: Boolean,
 }
 
 @Composable
-private fun CategoryEditScreenContent(category: CategoryEditViewData,
+private fun CategoryEditScreenContent(categoryExists: Boolean,
+                                      category: CategoryEditViewData,
                                       setCategory: (CategoryEditViewData) -> Unit,
                                       subcategories: List<SubcategoryItemViewData>?,
                                       onSubcategoryCreate: () -> Unit,
@@ -117,6 +119,7 @@ private fun CategoryEditScreenContent(category: CategoryEditViewData,
 {
 	Column {
 		CategoryTypeSelector(
+			enabled = !categoryExists,
 			type = category.type,
 			setType = { setCategory(category.withType(it)) }
 		)
@@ -133,7 +136,8 @@ private fun CategoryEditScreenContent(category: CategoryEditViewData,
 }
 
 @Composable
-private fun CategoryTypeSelector(type: CategoryTypeViewData,
+private fun CategoryTypeSelector(enabled: Boolean,
+                                 type: CategoryTypeViewData,
                                  setType: (CategoryTypeViewData) -> Unit)
 {
 	Box(
@@ -144,20 +148,17 @@ private fun CategoryTypeSelector(type: CategoryTypeViewData,
 		content = {
 			ToggleButtonGroup(
 				content = {
-					item(
-						checked = type == CategoryTypeViewData.EXPENSE,
-						onClick = { setType(CategoryTypeViewData.EXPENSE) },
-						content = {
-							Text(text = stringResource(R.string.category_type_expense))
-						}
-					)
-					item(
-						checked = type == CategoryTypeViewData.INCOME,
-						onClick = { setType(CategoryTypeViewData.INCOME) },
-						content = {
-							Text(text = stringResource(R.string.category_type_income))
-						}
-					)
+					fun item(categoryType: CategoryTypeViewData, @StringRes name: Int) =
+							item(
+								enabled = enabled || type == categoryType,
+								checked = type == categoryType,
+								onClick = { setType(categoryType) },
+								content = {
+									Text(text = stringResource(name))
+								}
+							)
+					item(CategoryTypeViewData.EXPENSE, R.string.category_type_expense)
+					item(CategoryTypeViewData.INCOME, R.string.category_type_income)
 				}
 			)
 		}

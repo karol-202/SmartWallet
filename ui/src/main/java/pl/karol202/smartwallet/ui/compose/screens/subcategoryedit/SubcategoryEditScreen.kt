@@ -62,7 +62,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 		subcategoryEditViewModel.finishEvent.collect { onNavigateBack() }
 	}
 
-	val allCategories by subcategoryEditViewModel.allCategories.collectAsState(emptyList())
+	val availableCategories by subcategoryEditViewModel.availableCategories.collectAsState(emptyList())
 	val editedSubcategory = subcategoryEditViewModel.editedSubcategory.collectAsState(null).value ?: return
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
@@ -85,7 +85,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 		},
 		bodyContent = {
 			SubcategoryEditScreenContent(
-				categories = allCategories,
+				categories = availableCategories,
 				subcategory = editedSubcategory,
 				setSubcategory = { subcategoryEditViewModel.setSubcategory(it) },
 			)
