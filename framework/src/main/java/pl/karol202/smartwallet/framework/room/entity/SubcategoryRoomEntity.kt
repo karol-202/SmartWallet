@@ -3,7 +3,6 @@ package pl.karol202.smartwallet.framework.room.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import pl.karol202.smartwallet.data.model.CategoryModel
 import pl.karol202.smartwallet.data.model.SubcategoryModel
 
 @Entity(tableName = "subcategories",

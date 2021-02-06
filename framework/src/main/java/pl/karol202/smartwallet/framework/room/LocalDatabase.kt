@@ -1,7 +1,10 @@
 package pl.karol202.smartwallet.framework.room
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import pl.karol202.smartwallet.framework.room.converter.CategoryTypeTypeConverter
 import pl.karol202.smartwallet.framework.room.converter.LocalDateTypeConverter
 import pl.karol202.smartwallet.framework.room.converter.TransactionTypeTypeConverter
@@ -25,8 +28,8 @@ abstract class LocalDatabase : RoomDatabase()
 	{
 		fun create(context: Context) =
 			Room.databaseBuilder(context.applicationContext, LocalDatabase::class.java, DATABASE_NAME)
-				.fallbackToDestructiveMigration() //TODO To be removed
-				.build()
+					.fallbackToDestructiveMigration() //TODO To be removed
+					.build()
 	}
 
 	abstract fun transactionDao(): TransactionDao

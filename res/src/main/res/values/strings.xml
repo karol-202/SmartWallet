@@ -30,4 +30,6 @@
 
     <string name="category_type_expense">Expense</string>
     <string name="category_type_income">Income</string>
+
+    <string name="others_category_default_name">Others</string>
 </resources>

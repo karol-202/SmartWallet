@@ -29,13 +29,13 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = Versions.KOTLIN
         kotlinCompilerExtensionVersion = Versions.ANDROID_COMPOSE
     }
 }
 
 dependencies {
     implementation(project(":presentation"))
+    implementation(project(":res"))
 
     implementation(Deps.KOTLIN_STDLIB)
 
