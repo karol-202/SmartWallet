@@ -24,6 +24,8 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		{
 			override val subcategory: SubcategoryEditViewData? = null
 			override val categoryType: Category.Type? = null
+			override val isCategoryChangeable = false
+			override val isRemovable = false
 
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = this
 		}
@@ -31,19 +33,25 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		data class New(override val subcategory: SubcategoryEditViewData) : EditState()
 		{
 			override val categoryType: Category.Type? = null
+			override val isCategoryChangeable = true
+			override val isRemovable = false
 
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = copy(subcategory = subcategory)
 		}
 
 		data class Existing(val id: String,
 		                    override val subcategory: SubcategoryEditViewData,
-		                    override val categoryType: Category.Type) : EditState()
+		                    override val categoryType: Category.Type,
+		                    override val isCategoryChangeable: Boolean,
+		                    override val isRemovable: Boolean) : EditState()
 		{
 			override fun withSubcategory(subcategory: SubcategoryEditViewData) = copy(subcategory = subcategory)
 		}
 
 		abstract val subcategory: SubcategoryEditViewData?
 		abstract val categoryType: Category.Type?
+		abstract val isCategoryChangeable: Boolean
+		abstract val isRemovable: Boolean
 
 		abstract fun withSubcategory(subcategory: SubcategoryEditViewData): EditState
 	}
@@ -55,6 +63,8 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 				getCategoriesFlowUseCase { editState.categoryType?.let(this::filterByType) }
 			}
 			.map { it.map(Category<Existing>::toItemViewData) }
+	override val isCategoryChangeable = editState.map { it.isCategoryChangeable }
+	override val isRemovable = editState.map { it.isRemovable }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewSubcategory(categoryId: String)
@@ -68,7 +78,9 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		editState.value = EditState.Existing(
 			id = subcategoryId,
 			subcategory = subcategory.toEditViewData(),
-			categoryType = category.type
+			categoryType = category.type,
+			isCategoryChangeable = !subcategory.isOthers,
+			isRemovable = !subcategory.isOthers
 		)
 	}
 
@@ -87,7 +99,8 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 	}
 
 	override fun removeSubcategory() = launch {
-		val existingEditState = editState.value as? EditState.Existing ?: return@launch
+		val existingEditState = editState.value as? EditState.Existing
+		if(existingEditState == null || !existingEditState.isRemovable) return@launch
 		removeSubcategoryUseCase(existingEditState.id)
 		cancel()
 	}

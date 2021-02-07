@@ -8,4 +8,7 @@ class DefaultNameProviderImpl(private val context: Context) : DefaultNameProvide
 {
 	override fun getDefaultOthersCategoryName() =
 			context.getString(R.string.others_category_default_name)
+
+	override fun getDefaultOthersSubcategoryName() =
+			context.getString(R.string.others_subcategory_default_name)
 }

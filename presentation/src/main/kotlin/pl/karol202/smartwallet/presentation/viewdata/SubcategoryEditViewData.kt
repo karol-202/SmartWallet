@@ -15,6 +15,6 @@ data class SubcategoryEditViewData(val categoryId: String,
 
 fun Subcategory<Existing>.toEditViewData() = SubcategoryEditViewData(categoryId, name)
 
-fun SubcategoryEditViewData.toEntity() = Subcategory(New, categoryId, name)
+fun SubcategoryEditViewData.toEntity() = Subcategory(New, categoryId, name, true)
 
-fun SubcategoryEditViewData.toEntity(id: String) = Subcategory(id.asId(), categoryId, name)
+fun SubcategoryEditViewData.toEntity(id: String) = Subcategory(id.asId(), categoryId, name, true)

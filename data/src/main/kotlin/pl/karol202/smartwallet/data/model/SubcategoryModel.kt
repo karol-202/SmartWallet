@@ -13,4 +13,4 @@ fun Subcategory<New>.toModel(newId: String) = SubcategoryModel(newId, categoryId
 
 fun Subcategory<Existing>.toModel() = SubcategoryModel(id.value, categoryId, name)
 
-fun SubcategoryModel.toEntity() = Subcategory(id.asId(), categoryId, name)
+fun SubcategoryModel.toEntity(isOthers: Boolean) = Subcategory(id.asId(), categoryId, name, isOthers)

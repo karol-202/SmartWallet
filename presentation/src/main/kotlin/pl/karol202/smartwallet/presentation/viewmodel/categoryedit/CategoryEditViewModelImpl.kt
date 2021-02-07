@@ -25,7 +25,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		{
 			override val id: String? = null
 			override val category: CategoryEditViewData? = null
-			override val removable = false
+			override val isRemovable = false
 
 			override fun withCategory(category: CategoryEditViewData) = this
 		}
@@ -33,21 +33,21 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		data class New(override val category: CategoryEditViewData) : EditState()
 		{
 			override val id: String? = null
-			override val removable = false
+			override val isRemovable = false
 
 			override fun withCategory(category: CategoryEditViewData) = copy(category = category)
 		}
 
 		data class Existing(override val id: String,
 		                    override val category: CategoryEditViewData,
-		                    override val removable: Boolean) : EditState()
+		                    override val isRemovable: Boolean) : EditState()
 		{
 			override fun withCategory(category: CategoryEditViewData) = copy(category = category)
 		}
 
 		abstract val id: String?
 		abstract val category: CategoryEditViewData?
-		abstract val removable: Boolean
+		abstract val isRemovable: Boolean
 
 		abstract fun withCategory(category: CategoryEditViewData): EditState
 	}
@@ -60,7 +60,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 						?: flowOf(null)
 			}
 			.map { it?.map(Subcategory<Existing>::toItemViewData) }
-	override val removable = editState.map { it.removable }
+	override val isRemovable = editState.map { it.isRemovable }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewCategory()
@@ -75,7 +75,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		editState.value = EditState.Existing(
 			id = categoryId,
 			category = category.toEditViewData(),
-			removable = category.removable
+			isRemovable = !category.isOthers
 		)
 	}
 
@@ -95,7 +95,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 
 	override fun removeCategory() = launch {
 		val existingEditState = editState.value as? EditState.Existing
-		if(existingEditState == null || !existingEditState.removable) return@launch
+		if(existingEditState == null || !existingEditState.isRemovable) return@launch
 		removeCategoryUseCase(existingEditState.id)
 		cancel()
 	}

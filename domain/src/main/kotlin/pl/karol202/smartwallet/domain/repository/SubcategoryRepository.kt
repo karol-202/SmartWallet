@@ -10,6 +10,8 @@ interface SubcategoryRepository
 {
 	val allSubcategories: Flow<List<Subcategory<Existing>>>
 
+	fun getOthersSubcategory(type: Category.Type): Flow<Subcategory<Existing>>
+
 	fun getSubcategory(subcategoryId: String): Flow<Subcategory<Existing>?>
 
 	suspend fun addSubcategory(subcategory: Subcategory<New>)
@@ -17,4 +19,6 @@ interface SubcategoryRepository
 	suspend fun updateSubcategory(subcategory: Subcategory<Existing>)
 
 	suspend fun removeSubcategory(subcategoryId: String)
+
+	suspend fun ensureIntegrity()
 }

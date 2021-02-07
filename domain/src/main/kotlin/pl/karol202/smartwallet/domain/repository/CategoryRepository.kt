@@ -11,6 +11,8 @@ interface CategoryRepository
 
 	fun getOthersCategory(type: Category.Type): Flow<Category<Existing>>
 
+	fun getOthersCategoryId(type: Category.Type): String
+
 	fun getCategory(categoryId: String): Flow<Category<Existing>?>
 
 	suspend fun addCategory(category: Category<New>)

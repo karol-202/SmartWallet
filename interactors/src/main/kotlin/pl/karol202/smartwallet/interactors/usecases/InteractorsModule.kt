@@ -7,7 +7,7 @@ import pl.karol202.smartwallet.interactors.usecases.subcategory.*
 import pl.karol202.smartwallet.interactors.usecases.transaction.*
 
 fun interactorsModule() = module {
-	single { initializeRepositoriesUseCaseFactory(get()) }
+	single { initializeRepositoriesUseCaseFactory(get(), get()) }
 
 	single { getTransactionsWithCategoriesFlowUseCaseFactory(get(), get()) }
 	single { getTransactionUseCaseFactory(get()) }
@@ -23,6 +23,7 @@ fun interactorsModule() = module {
 	single { removeCategoryUseCaseFactory(get()) }
 
 	single { getSubcategoryUseCaseFactory(get()) }
+	single { getOthersSubcategoryUseCaseFactory(get()) }
 	single { getSubcategoriesFlowUseCaseFactory(get()) }
 	single { addSubcategoryUseCaseFactory(get()) }
 	single { updateSubcategoryUseCaseFactory(get()) }

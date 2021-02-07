@@ -13,8 +13,8 @@ import pl.karol202.smartwallet.domain.entity.Existing
 import pl.karol202.smartwallet.domain.entity.New
 import pl.karol202.smartwallet.domain.repository.CategoryRepository
 
-private const val ID_SUBJECT_EXPENSES = "expenses"
-private const val ID_SUBJECT_INCOMES = "incomes"
+private const val ID_SUBJECT_EXPENSES = "category_expenses"
+private const val ID_SUBJECT_INCOMES = "category_incomes"
 
 class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource,
                               private val idDataSource: IdDataSource,
@@ -30,6 +30,9 @@ class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource
 
 	override fun getOthersCategory(type: Category.Type) =
 			getCategory(getOthersIdByType(type)).map { it ?: error("Others category does not exist") }
+
+	override fun getOthersCategoryId(type: Category.Type) =
+			getOthersIdByType(type)
 
 	override fun getCategory(categoryId: String) =
 			categoryDataSource.getCategory(categoryId).map { it?.let(this::toEntity) }
@@ -49,7 +52,7 @@ class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource
 
 	override suspend fun removeCategory(categoryId: String)
 	{
-		if(isRemovable(categoryId)) categoryDataSource.removeCategory(categoryId)
+		if(!isOthersCategory(categoryId)) categoryDataSource.removeCategory(categoryId)
 	}
 
 	override suspend fun ensureIntegrity() =
@@ -59,11 +62,9 @@ class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource
 	{
 		val id = getOthersIdByType(type)
 		val category = getCategory(id).first()
-		when
-		{
-			category == null -> categoryDataSource.addCategory(createDefaultOthersCategoryModel(id, type))
-			category.type != type -> categoryDataSource.updateCategory(fixOthersCategory(category, type).toModel())
-		}
+
+		if(category == null) categoryDataSource.addCategory(createDefaultOthersCategoryModel(id, type))
+		else categoryDataSource.updateCategory(fixOthersCategory(category, type).toModel())
 	}
 
 	private fun createDefaultOthersCategoryModel(id: String, type: Category.Type) = CategoryModel(
@@ -79,7 +80,7 @@ class LocalCategoryRepository(private val categoryDataSource: CategoryDataSource
 
 	private fun getOthersTypeById(id: String) = othersIds.entries.find { it.value == id }?.key
 
-	private fun toEntity(model: CategoryModel) = model.toEntity(removable = isRemovable(model.id))
+	private fun toEntity(model: CategoryModel) = model.toEntity(isOthers = isOthersCategory(model.id))
 
-	private fun isRemovable(id: String) = id !in othersIds.values
+	private fun isOthersCategory(id: String) = id in othersIds.values
 }

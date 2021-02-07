@@ -64,6 +64,8 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 
 	val availableCategories by subcategoryEditViewModel.availableCategories.collectAsState(emptyList())
 	val editedSubcategory = subcategoryEditViewModel.editedSubcategory.collectAsState(null).value ?: return
+	val isCategoryChangeable = subcategoryEditViewModel.isCategoryChangeable.collectAsState(false).value
+	val isRemovable = subcategoryEditViewModel.isRemovable.collectAsState(false).value
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
 
@@ -71,6 +73,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 		topBar = {
 			SubcategoryEditScreenAppbar(
 				subcategoryExists = subcategoryExists,
+				removable = isRemovable,
 				onNavigateBack = onNavigateBack,
 				onRemove = { removeDialogVisible = true }
 			)
@@ -86,6 +89,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 		bodyContent = {
 			SubcategoryEditScreenContent(
 				categories = availableCategories,
+				isCategoryChangeable = isCategoryChangeable,
 				subcategory = editedSubcategory,
 				setSubcategory = { subcategoryEditViewModel.setSubcategory(it) },
 			)
@@ -101,6 +105,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 
 @Composable
 private fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
+                                        removable: Boolean,
                                         onNavigateBack: () -> Unit,
                                         onRemove: () -> Unit)
 {
@@ -120,7 +125,7 @@ private fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
 		actions = {
 			AppBarIcon(
 				imageVector = Icons.Filled.Delete,
-				enabled = subcategoryExists,
+				enabled = removable,
 				onClick = onRemove
 			)
 		}
@@ -129,6 +134,7 @@ private fun SubcategoryEditScreenAppbar(subcategoryExists: Boolean,
 
 @Composable
 private fun SubcategoryEditScreenContent(categories: List<CategoryItemViewData>,
+                                         isCategoryChangeable: Boolean,
                                          subcategory: SubcategoryEditViewData,
                                          setSubcategory: (SubcategoryEditViewData) -> Unit)
 {
@@ -139,6 +145,7 @@ private fun SubcategoryEditScreenContent(categories: List<CategoryItemViewData>,
 		)
 		SubcategoryCategory(
 			categories = categories,
+			isCategoryChangeable = isCategoryChangeable,
 			categoryId = subcategory.categoryId,
 			setCategory = { setSubcategory(subcategory.withCategory(it)) }
 		)
@@ -163,11 +170,13 @@ private fun SubcategoryName(name: String,
 
 @Composable
 private fun SubcategoryCategory(categories: List<CategoryItemViewData>,
+                                isCategoryChangeable: Boolean,
                                 categoryId: String,
                                 setCategory: (String) -> Unit)
 {
 	ExposedDropdownMenu(
 		selectedValue = categories.find { it.id == categoryId }?.name ?: "",
+		enabled = isCategoryChangeable,
 		modifier = Modifier
 				.padding(horizontal = 24.dp, vertical = 8.dp),
 		textFieldModifier = Modifier

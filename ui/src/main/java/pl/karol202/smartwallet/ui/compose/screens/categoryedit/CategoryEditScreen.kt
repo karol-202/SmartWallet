@@ -41,7 +41,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 
 	val editedCategory = categoryEditViewModel.editedCategory.collectAsState(null).value ?: return
 	val subcategories = categoryEditViewModel.subcategories.collectAsState(null).value
-	val removable = categoryEditViewModel.removable.collectAsState(false).value
+	val removable = categoryEditViewModel.isRemovable.collectAsState(false).value
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
 
