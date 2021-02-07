@@ -32,6 +32,7 @@ android {
 
 dependencies {
     implementation(project(":data"))
+    implementation(project(":res"))
 
     implementation(Deps.KOTLIN_STDLIB)
 

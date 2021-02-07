@@ -25,6 +25,7 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		{
 			override val id: String? = null
 			override val category: CategoryEditViewData? = null
+			override val removable = false
 
 			override fun withCategory(category: CategoryEditViewData) = this
 		}
@@ -32,18 +33,21 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		data class New(override val category: CategoryEditViewData) : EditState()
 		{
 			override val id: String? = null
+			override val removable = false
 
 			override fun withCategory(category: CategoryEditViewData) = copy(category = category)
 		}
 
 		data class Existing(override val id: String,
-		                    override val category: CategoryEditViewData) : EditState()
+		                    override val category: CategoryEditViewData,
+		                    override val removable: Boolean) : EditState()
 		{
 			override fun withCategory(category: CategoryEditViewData) = copy(category = category)
 		}
 
 		abstract val id: String?
 		abstract val category: CategoryEditViewData?
+		abstract val removable: Boolean
 
 		abstract fun withCategory(category: CategoryEditViewData): EditState
 	}
@@ -56,17 +60,22 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 						?: flowOf(null)
 			}
 			.map { it?.map(Subcategory<Existing>::toItemViewData) }
+	override val removable = editState.map { it.removable }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewCategory()
 	{
-		editState.value = EditState.New(category = CategoryEditViewData("", CategoryTypeViewData.EXPENSE))
+		editState.value = EditState.New(
+			category = CategoryEditViewData(name = "", type = CategoryTypeViewData.EXPENSE)
+		)
 	}
 
 	override fun editExistingCategory(categoryId: String) = launch {
+		val category = getCategoryUseCase(categoryId) ?: error("Category does not exist")
 		editState.value = EditState.Existing(
 			id = categoryId,
-			category = getCategoryUseCase(categoryId)?.toEditViewData() ?: error("Category does not exist")
+			category = category.toEditViewData(),
+			removable = category.removable
 		)
 	}
 
@@ -79,13 +88,14 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		when(val editState = editState.value)
 		{
 			is EditState.New -> addCategoryUseCase(editState.category.toEntity())
-			is EditState.Existing -> updateCategoryUseCase(editState.category.toEntity(editState.id))
+			is EditState.Existing -> updateCategoryUseCase(editState.category.toEntity(id = editState.id))
 		}
 		cancel()
 	}
 
 	override fun removeCategory() = launch {
-		val existingEditState = editState.value as? EditState.Existing ?: return@launch
+		val existingEditState = editState.value as? EditState.Existing
+		if(existingEditState == null || !existingEditState.removable) return@launch
 		removeCategoryUseCase(existingEditState.id)
 		cancel()
 	}

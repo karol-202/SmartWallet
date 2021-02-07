@@ -9,6 +9,8 @@ interface CategoryRepository
 {
 	val allCategories: Flow<List<Category<Existing>>>
 
+	fun getOthersCategory(type: Category.Type): Flow<Category<Existing>>
+
 	fun getCategory(categoryId: String): Flow<Category<Existing>?>
 
 	suspend fun addCategory(category: Category<New>)
@@ -16,4 +18,6 @@ interface CategoryRepository
 	suspend fun updateCategory(category: Category<Existing>)
 
 	suspend fun removeCategory(categoryId: String)
+
+	suspend fun ensureIntegrity()
 }

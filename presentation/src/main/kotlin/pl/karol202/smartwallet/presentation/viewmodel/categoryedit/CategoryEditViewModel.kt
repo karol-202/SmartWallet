@@ -9,6 +9,7 @@ interface CategoryEditViewModel : ViewModel
 {
 	val editedCategory: Flow<CategoryEditViewData?>
 	val subcategories: Flow<List<SubcategoryItemViewData>?>
+	val removable: Flow<Boolean>
 	val finishEvent: Flow<Unit>
 
 	fun editNewCategory()

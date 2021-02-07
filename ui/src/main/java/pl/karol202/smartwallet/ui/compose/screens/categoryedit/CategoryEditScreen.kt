@@ -41,6 +41,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 
 	val editedCategory = categoryEditViewModel.editedCategory.collectAsState(null).value ?: return
 	val subcategories = categoryEditViewModel.subcategories.collectAsState(null).value
+	val removable = categoryEditViewModel.removable.collectAsState(false).value
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
 
@@ -48,6 +49,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 		topBar = {
 			CategoryEditScreenAppbar(
 				categoryExists = categoryId != null,
+				removable = removable,
 				onNavigateBack = onNavigateBack,
 				onRemove = { removeDialogVisible = true }
 			)
@@ -83,6 +85,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 
 @Composable
 private fun CategoryEditScreenAppbar(categoryExists: Boolean,
+                                     removable: Boolean,
                                      onNavigateBack: () -> Unit,
                                      onRemove: () -> Unit)
 {
@@ -102,7 +105,7 @@ private fun CategoryEditScreenAppbar(categoryExists: Boolean,
 		actions = {
 			AppBarIcon(
 				imageVector = Icons.Filled.Delete,
-				enabled = categoryExists,
+				enabled = removable,
 				onClick = onRemove
 			)
 		}

@@ -10,6 +10,6 @@ import pl.karol202.smartwallet.domain.repository.TransactionRepository
 
 fun dataModule() = module {
 	single<TransactionRepository> { LocalTransactionRepository(get(), get()) }
-	single<CategoryRepository> { LocalCategoryRepository(get(), get()) }
+	single<CategoryRepository> { LocalCategoryRepository(get(), get(), get()) }
 	single<SubcategoryRepository> { LocalSubcategoryRepository(get(), get()) }
 }

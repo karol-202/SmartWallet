@@ -15,6 +15,6 @@ data class CategoryEditViewData(val name: String,
 
 fun Category<Existing>.toEditViewData() = CategoryEditViewData(name, type.toViewData())
 
-fun CategoryEditViewData.toEntity() = Category(New, name, type.toEntity())
+fun CategoryEditViewData.toEntity() = Category(New, name, type.toEntity(), true)
 
-fun CategoryEditViewData.toEntity(id: String) = Category(id.asId(), name, type.toEntity())
+fun CategoryEditViewData.toEntity(id: String) = Category(id.asId(), name, type.toEntity(), true)

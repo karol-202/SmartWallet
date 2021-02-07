@@ -25,7 +25,7 @@ fun Category.Type.toModel() = when(this)
 	Category.Type.INCOME -> CategoryModel.Type.INCOME
 }
 
-fun CategoryModel.toEntity() = Category(id.asId(), name, type.toEntity())
+fun CategoryModel.toEntity(removable: Boolean) = Category(id.asId(), name, type.toEntity(), removable)
 
 fun CategoryModel.Type.toEntity() = when(this)
 {
