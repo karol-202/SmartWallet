@@ -19,6 +19,9 @@ interface SubcategoryDao
 	@Query("DELETE FROM subcategories WHERE id = :id")
 	suspend fun delete(id: String)
 
+	@Query("UPDATE subcategories SET categoryId = :destinationCategoryId WHERE categoryId = :sourceCategoryId")
+	suspend fun moveSubcategories(sourceCategoryId: String, destinationCategoryId: String)
+
 	@Query("SELECT * FROM subcategories")
 	fun getAll(): Flow<List<SubcategoryRoomEntity>>
 

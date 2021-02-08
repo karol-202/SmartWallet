@@ -17,8 +17,10 @@ import kotlinx.coroutines.flow.collect
 import pl.karol202.smartwallet.presentation.viewdata.CategoryEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.CategoryTypeViewData
 import pl.karol202.smartwallet.presentation.viewdata.SubcategoryItemViewData
+import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModel.SubcategoriesRemovePolicy
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
+import pl.karol202.smartwallet.ui.compose.view.SimpleAlertButtonsOrientation
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonGroup
 import pl.karol202.smartwallet.ui.viewmodel.AndroidCategoryEditViewModel
@@ -78,7 +80,7 @@ fun CategoryEditScreen(categoryEditViewModel: AndroidCategoryEditViewModel,
 
 	if(removeDialogVisible) CategoryRemoveDialog(
 		categoryName = editedCategory.name,
-		onConfirm = { categoryEditViewModel.removeCategory() },
+		onConfirm = { categoryEditViewModel.removeCategory(it) },
 		onDismiss = { removeDialogVisible = false }
 	)
 }
@@ -245,14 +247,16 @@ private fun CategorySubcategoryItem(subcategory: SubcategoryItemViewData,
 
 @Composable
 private fun CategoryRemoveDialog(categoryName: String,
-                                 onConfirm: () -> Unit,
+                                 onConfirm: (SubcategoriesRemovePolicy) -> Unit,
                                  onDismiss: () -> Unit)
 {
 	SimpleAlertDialog(
 		title = stringResource(R.string.dialog_category_remove_title, categoryName),
-		confirmText = stringResource(R.string.text_dialog_remove),
-		dismissText = stringResource(R.string.text_dialog_cancel),
-		onConfirm = onConfirm,
-		onDismiss = onDismiss
+		buttonsOrientation = SimpleAlertButtonsOrientation.VERTICAL,
+		buttons = {
+			button(R.string.text_category_remove_dialog_remove) { onConfirm(SubcategoriesRemovePolicy.REMOVE) }
+			button(R.string.text_category_remove_dialog_move) { onConfirm(SubcategoriesRemovePolicy.MOVE_TO_OTHERS) }
+			dismissButton(R.string.text_dialog_cancel, onDismiss)
+		}
 	)
 }

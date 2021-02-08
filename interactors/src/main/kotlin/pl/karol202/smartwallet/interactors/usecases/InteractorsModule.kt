@@ -21,7 +21,7 @@ fun interactorsModule() = module {
 	single { getCategoryUseCaseFactory(get()) }
 	single { addCategoryUseCaseFactory(get()) }
 	single { updateCategoryUseCaseFactory(get()) }
-	single { removeCategoryUseCaseFactory(get()) }
+	single { removeCategoryUseCaseFactory(get(), get()) }
 
 	single { getSubcategoryUseCaseFactory(get()) }
 	single { getOthersSubcategoryUseCaseFactory(get()) }

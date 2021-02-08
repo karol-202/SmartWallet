@@ -51,7 +51,14 @@ class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryD
 
 	override suspend fun removeSubcategory(subcategoryId: String)
 	{
-		if(!isOthersCategory(subcategoryId)) subcategoryDataSource.removeSubcategory(subcategoryId)
+		if(!isOthersSubcategory(subcategoryId))
+			subcategoryDataSource.removeSubcategory(subcategoryId)
+	}
+
+	override suspend fun moveSubcategories(sourceCategoryId: String, destinationCategoryId: String)
+	{
+		if(!isOthersCategory(sourceCategoryId))
+			subcategoryDataSource.moveSubcategories(sourceCategoryId, destinationCategoryId)
 	}
 
 	override suspend fun ensureIntegrity() =
@@ -81,7 +88,9 @@ class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryD
 
 	private fun getOthersTypeById(id: String) = othersIds.entries.find { it.value == id }?.key
 
-	private fun toEntity(model: SubcategoryModel) = model.toEntity(isOthers = isOthersCategory(model.id))
+	private fun toEntity(model: SubcategoryModel) = model.toEntity(isOthers = isOthersSubcategory(model.id))
 
-	private fun isOthersCategory(id: String) = id in othersIds.values
+	private fun isOthersCategory(id: String) = Category.Type.values().any { categoryRepository.getOthersCategoryId(it) == id }
+
+	private fun isOthersSubcategory(id: String) = id in othersIds.values
 }

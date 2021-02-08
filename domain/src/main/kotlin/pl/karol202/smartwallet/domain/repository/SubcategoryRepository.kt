@@ -20,5 +20,7 @@ interface SubcategoryRepository
 
 	suspend fun removeSubcategory(subcategoryId: String)
 
+	suspend fun moveSubcategories(sourceCategoryId: String, destinationCategoryId: String)
+
 	suspend fun ensureIntegrity()
 }

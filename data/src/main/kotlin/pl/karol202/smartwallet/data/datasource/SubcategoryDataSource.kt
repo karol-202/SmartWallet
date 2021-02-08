@@ -2,8 +2,6 @@ package pl.karol202.smartwallet.data.datasource
 
 import kotlinx.coroutines.flow.Flow
 import pl.karol202.smartwallet.data.model.SubcategoryModel
-import pl.karol202.smartwallet.domain.entity.Existing
-import pl.karol202.smartwallet.domain.entity.Subcategory
 
 interface SubcategoryDataSource
 {
@@ -16,4 +14,6 @@ interface SubcategoryDataSource
     suspend fun updateSubcategory(subcategory: SubcategoryModel)
 
     suspend fun removeSubcategory(subcategoryId: String)
+
+    suspend fun moveSubcategories(sourceCategoryId: String, destinationCategoryId: String)
 }

@@ -23,4 +23,7 @@ class RoomSubcategoryDataSource(private val subcategoryDao: SubcategoryDao) : Su
 
 	override suspend fun removeSubcategory(subcategoryId: String) =
 			subcategoryDao.delete(subcategoryId)
+
+	override suspend fun moveSubcategories(sourceCategoryId: String, destinationCategoryId: String) =
+			subcategoryDao.moveSubcategories(sourceCategoryId, destinationCategoryId)
 }

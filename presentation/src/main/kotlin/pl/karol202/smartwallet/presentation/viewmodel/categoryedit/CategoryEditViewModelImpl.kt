@@ -11,6 +11,7 @@ import pl.karol202.smartwallet.interactors.usecases.subcategory.GetSubcategories
 import pl.karol202.smartwallet.interactors.usecases.subcategory.filterByCategoryId
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModel.SubcategoriesRemovePolicy
 
 class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCase,
                                 private val addCategoryUseCase: AddCategoryUseCase,
@@ -93,11 +94,17 @@ class CategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCa
 		cancel()
 	}
 
-	override fun removeCategory() = launch {
+	override fun removeCategory(subcategoriesPolicy: SubcategoriesRemovePolicy) = launch {
 		val existingEditState = editState.value as? EditState.Existing
 		if(existingEditState == null || !existingEditState.isRemovable) return@launch
-		removeCategoryUseCase(existingEditState.id)
+		removeCategoryUseCase(existingEditState.id, subcategoriesPolicy.toUseCasePolicy())
 		cancel()
+	}
+
+	private fun SubcategoriesRemovePolicy.toUseCasePolicy() = when(this)
+	{
+		SubcategoriesRemovePolicy.REMOVE -> RemoveCategoryUseCase.SubcategoriesPolicy.REMOVE
+		SubcategoriesRemovePolicy.MOVE_TO_OTHERS -> RemoveCategoryUseCase.SubcategoriesPolicy.MOVE_TO_OTHERS
 	}
 
 	private suspend fun cancel()
