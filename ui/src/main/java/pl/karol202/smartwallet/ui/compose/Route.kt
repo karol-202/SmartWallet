@@ -1,6 +1,7 @@
 package pl.karol202.smartwallet.ui.compose
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -80,6 +81,13 @@ sealed class Routes : Route
 
 		fun constructRoute(subcategoryId: String) =
 				"subcategoryEdit" + constructQueryParams(ARG_SUBCATEGORY_ID to subcategoryId)
+	}
+
+	object Accounts : Routes(), Route.TopLevel
+	{
+		override val route = "accounts"
+		override val nameResource = R.string.screen_accounts
+		override val icon = Icons.Filled.AccountBalance
 	}
 
 	@GenSealedEnum

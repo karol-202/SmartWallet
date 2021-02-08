@@ -1,6 +1,8 @@
 package pl.karol202.smartwallet.presentation
 
 import org.koin.dsl.module
+import pl.karol202.smartwallet.presentation.viewmodel.accounts.AccountsViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.accounts.AccountsViewModelImpl
 import pl.karol202.smartwallet.presentation.viewmodel.categories.CategoriesViewModel
 import pl.karol202.smartwallet.presentation.viewmodel.categories.CategoriesViewModelImpl
 import pl.karol202.smartwallet.presentation.viewmodel.categoryedit.CategoryEditViewModel
@@ -18,4 +20,5 @@ fun presentationModule() = module {
 	factory<CategoriesViewModel> { CategoriesViewModelImpl(get()) }
 	factory<CategoryEditViewModel> { CategoryEditViewModelImpl(get(), get(), get(), get(), get()) }
 	factory<SubcategoryEditViewModel> { SubcategoryEditViewModelImpl(get(), get(), get(), get(), get(), get()) }
+	factory<AccountsViewModel> { AccountsViewModelImpl(get()) }
 }

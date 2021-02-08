@@ -29,7 +29,7 @@ fun CategoriesScreen(categoriesViewModel: AndroidCategoriesViewModel,
                      onRouteSelect: (Route.TopLevel) -> Unit,
                      onCategoryCreate: () -> Unit,
                      onCategoryEdit: (String) -> Unit,
-                     onSubategoryEdit: (String) -> Unit)
+                     onSubcategoryEdit: (String) -> Unit)
 {
 	val allCategories by categoriesViewModel.allCategories.collectAsState(emptyList())
 
@@ -66,7 +66,7 @@ fun CategoriesScreen(categoriesViewModel: AndroidCategoriesViewModel,
 			CategoriesScreenContent(
 				categories = allCategories,
 				onCategoryEdit = onCategoryEdit,
-				onSubcategoryEdit = onSubategoryEdit
+				onSubcategoryEdit = onSubcategoryEdit
 			)
 		},
 	)

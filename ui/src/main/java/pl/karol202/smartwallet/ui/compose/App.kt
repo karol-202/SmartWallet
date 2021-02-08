@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
+import pl.karol202.smartwallet.ui.compose.screens.accounts.AccountsScreen
 import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
 import pl.karol202.smartwallet.ui.compose.screens.categoryedit.CategoryEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.subcategoryedit.SubcategoryEditScreenExisting
@@ -58,7 +59,6 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
                                       onNavigate: (String) -> Unit,
                                       onNavigateTopLevel: (String) -> Unit,
                                       onNavigateBack: () -> Unit) = composable(route.route, route.args) { navEntry ->
-
 	Providers(AmbientRoute provides route) {
 		when(route)
 		{
@@ -91,7 +91,7 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
 					onCategoryEdit = { categoryId ->
 						onNavigate(Routes.CategoryEdit.constructRoute(categoryId))
 					},
-					onSubategoryEdit = { subcategoryId ->
+					onSubcategoryEdit = { subcategoryId ->
 						onNavigate(Routes.SubcategoryEditExisting.constructRoute(subcategoryId))
 					}
 				)
@@ -118,6 +118,18 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
 					subcategoryEditViewModel = getViewModel(),
 					subcategoryId = navEntry.requireStringArgument(Routes.SubcategoryEditExisting.ARG_SUBCATEGORY_ID),
 					onNavigateBack = onNavigateBack
+				)
+			Routes.Accounts ->
+				AccountsScreen(
+					accountsViewModel = getViewModel(),
+					scaffoldState = scaffoldState,
+					onRouteSelect = { onNavigateTopLevel(it.constructRoute()) },
+					onAccountCreate = {
+						//onNavigate(Routes.CategoryEdit.constructRoute())
+					},
+					onAccountEdit = { accountId ->
+						//onNavigate(Routes.CategoryEdit.constructRoute(categoryId))
+					}
 				)
 		}
 	}
