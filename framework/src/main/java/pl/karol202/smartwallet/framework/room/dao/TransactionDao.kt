@@ -1,6 +1,9 @@
 package pl.karol202.smartwallet.framework.room.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
@@ -15,6 +18,9 @@ interface TransactionDao
 
 	@Query("DELETE FROM transactions WHERE id = :id")
 	suspend fun delete(id: String)
+
+	@Query("UPDATE transactions SET subcategoryId = :destinationSubcategoryId WHERE subcategoryId = :sourceSubcategoryId")
+	suspend fun moveBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String)
 
 	@Query("SELECT * FROM transactions")
 	fun getAll(): Flow<List<TransactionRoomEntity>>

@@ -9,6 +9,7 @@ import pl.karol202.smartwallet.interactors.usecases.category.filterByType
 import pl.karol202.smartwallet.interactors.usecases.subcategory.*
 import pl.karol202.smartwallet.presentation.viewdata.*
 import pl.karol202.smartwallet.presentation.viewmodel.BaseViewModel
+import pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit.SubcategoryEditViewModel.TransactionsRemovePolicy
 
 class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUseCase,
                                    private val getSubcategoryUseCase: GetSubcategoryUseCase,
@@ -98,11 +99,17 @@ class SubcategoryEditViewModelImpl(private val getCategoryUseCase: GetCategoryUs
 		cancel()
 	}
 
-	override fun removeSubcategory() = launch {
+	override fun removeSubcategory(transactionsPolicy: TransactionsRemovePolicy) = launch {
 		val existingEditState = editState.value as? EditState.Existing
 		if(existingEditState == null || !existingEditState.isRemovable) return@launch
-		removeSubcategoryUseCase(existingEditState.id)
+		removeSubcategoryUseCase(existingEditState.id, transactionsPolicy.toUseCasePolicy())
 		cancel()
+	}
+
+	private fun TransactionsRemovePolicy.toUseCasePolicy() = when(this)
+	{
+		TransactionsRemovePolicy.REMOVE -> RemoveSubcategoryUseCase.TransactionsPolicy.REMOVE
+		TransactionsRemovePolicy.MOVE_TO_OTHERS -> RemoveSubcategoryUseCase.TransactionsPolicy.MOVE_TO_OTHERS
 	}
 
 	private suspend fun cancel()

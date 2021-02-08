@@ -7,6 +7,11 @@ import pl.karol202.smartwallet.presentation.viewmodel.ViewModel
 
 interface SubcategoryEditViewModel : ViewModel
 {
+	enum class TransactionsRemovePolicy
+	{
+		REMOVE, MOVE_TO_OTHERS
+	}
+
 	val editedSubcategory: Flow<SubcategoryEditViewData?>
 	val availableCategories: Flow<List<CategoryItemViewData>>
 	val isCategoryChangeable: Flow<Boolean>
@@ -21,5 +26,5 @@ interface SubcategoryEditViewModel : ViewModel
 
 	fun apply()
 
-	fun removeSubcategory()
+	fun removeSubcategory(transactionsPolicy: TransactionsRemovePolicy)
 }

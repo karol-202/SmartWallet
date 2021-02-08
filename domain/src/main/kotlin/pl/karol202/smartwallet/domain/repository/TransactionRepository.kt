@@ -16,4 +16,6 @@ interface TransactionRepository
 	suspend fun updateTransaction(transaction: Transaction<Existing>)
 
 	suspend fun removeTransaction(transactionId: String)
+
+	suspend fun moveTransactionsBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String)
 }

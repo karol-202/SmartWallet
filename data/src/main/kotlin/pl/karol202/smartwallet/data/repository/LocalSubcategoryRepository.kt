@@ -33,6 +33,9 @@ class LocalSubcategoryRepository(private val subcategoryDataSource: SubcategoryD
 	override fun getOthersSubcategory(type: Category.Type) =
 			getSubcategory(getOthersIdByType(type)).map { it ?: error("Others subcategory does not exist") }
 
+	override fun getOthersSubcategoryId(type: Category.Type) =
+			getOthersIdByType(type)
+
 	override fun getSubcategory(subcategoryId: String) =
 			subcategoryDataSource.getSubcategory(subcategoryId).map { it?.let(this::toEntity) }
 

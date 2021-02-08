@@ -12,6 +12,8 @@ interface SubcategoryRepository
 
 	fun getOthersSubcategory(type: Category.Type): Flow<Subcategory<Existing>>
 
+	fun getOthersSubcategoryId(type: Category.Type): String
+
 	fun getSubcategory(subcategoryId: String): Flow<Subcategory<Existing>?>
 
 	suspend fun addSubcategory(subcategory: Subcategory<New>)

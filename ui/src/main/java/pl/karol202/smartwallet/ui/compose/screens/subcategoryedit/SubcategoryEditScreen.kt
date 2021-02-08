@@ -15,9 +15,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collect
 import pl.karol202.smartwallet.presentation.viewdata.CategoryItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.SubcategoryEditViewData
+import pl.karol202.smartwallet.presentation.viewmodel.subcategoryedit.SubcategoryEditViewModel.TransactionsRemovePolicy
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.ExposedDropdownMenu
+import pl.karol202.smartwallet.ui.compose.view.SimpleAlertButtonsOrientation
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidSubcategoryEditViewModel
 
@@ -98,7 +100,7 @@ private fun SubcategoryEditScreenInternal(subcategoryEditViewModel: AndroidSubca
 
 	if(removeDialogVisible) SubcategoryRemoveDialog(
 		subcategoryName = editedSubcategory.name,
-		onConfirm = { subcategoryEditViewModel.removeSubcategory() },
+		onConfirm = { subcategoryEditViewModel.removeSubcategory(it) },
 		onDismiss = { removeDialogVisible = false }
 	)
 }
@@ -202,14 +204,16 @@ private fun SubcategoryCategory(categories: List<CategoryItemViewData>,
 
 @Composable
 private fun SubcategoryRemoveDialog(subcategoryName: String,
-                                    onConfirm: () -> Unit,
+                                    onConfirm: (TransactionsRemovePolicy) -> Unit,
                                     onDismiss: () -> Unit)
 {
 	SimpleAlertDialog(
 		title = stringResource(R.string.dialog_subcategory_remove_title, subcategoryName),
-		confirmText = stringResource(R.string.text_dialog_remove),
-		dismissText = stringResource(R.string.text_dialog_cancel),
-		onConfirm = onConfirm,
-		onDismiss = onDismiss
+		buttonsOrientation = SimpleAlertButtonsOrientation.VERTICAL,
+		buttons = {
+			button(R.string.text_category_remove_dialog_remove) { onConfirm(TransactionsRemovePolicy.REMOVE) }
+			button(R.string.text_category_remove_dialog_move) { onConfirm(TransactionsRemovePolicy.MOVE_TO_OTHERS) }
+			dismissButton(R.string.text_dialog_cancel, onDismiss)
+		}
 	)
 }

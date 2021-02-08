@@ -28,7 +28,7 @@ fun interactorsModule() = module {
 	single { getSubcategoriesFlowUseCaseFactory(get()) }
 	single { addSubcategoryUseCaseFactory(get()) }
 	single { updateSubcategoryUseCaseFactory(get()) }
-	single { removeSubcategoryUseCaseFactory(get()) }
+	single { removeSubcategoryUseCaseFactory(get(), get(), get()) }
 
 	single { getAccountsFlowUseCaseFactory(get()) }
 	single { getAccountUseCaseFactory(get()) }
