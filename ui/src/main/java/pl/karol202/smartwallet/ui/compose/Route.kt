@@ -90,6 +90,17 @@ sealed class Routes : Route
 		override val icon = Icons.Filled.AccountBalance
 	}
 
+	object AccountEdit : Routes()
+	{
+		const val ARG_ACCOUNT_ID = "accountId"
+
+		override val route = "accountEdit?$ARG_ACCOUNT_ID={$ARG_ACCOUNT_ID}"
+		override val args = listOf(navArgument(ARG_ACCOUNT_ID) { type = NavType.StringType; nullable = true })
+
+		fun constructRoute(accountId: String? = null) =
+				"accountEdit" + constructQueryParams(ARG_ACCOUNT_ID to accountId)
+	}
+
 	@GenSealedEnum
 	companion object
 	{

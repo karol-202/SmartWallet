@@ -12,10 +12,13 @@
     <string name="screen_subcategory_new">New subcategory</string>
     <string name="screen_subcategory_edit">Edit subcategory</string>
     <string name="screen_accounts">Accounts</string>
+    <string name="screen_account_new">New account</string>
+    <string name="screen_account_edit">Edit account</string>
 
     <string name="dialog_transaction_remove_title">Do you want to remove this transaction?</string>
     <string name="dialog_category_remove_title">Do you want to remove category %s?</string>
     <string name="dialog_subcategory_remove_title">Do you want to remove subcategory %s?</string>
+    <string name="dialog_account_remove_title">Do you want to remove account %s?</string>
 
     <string name="text_transaction_edit_amount">Amount</string>
     <string name="text_transaction_edit_subcategory">Subcategory</string>
@@ -23,6 +26,7 @@
     <string name="text_category_edit_subcategories">Subcategories</string>
     <string name="text_subcategory_edit_name">Name</string>
     <string name="text_subcategory_edit_category">Category</string>
+    <string name="text_account_edit_name">Name</string>
     <string name="text_dialog_remove">Remove</string>
     <string name="text_dialog_cancel">Cancel</string>
 

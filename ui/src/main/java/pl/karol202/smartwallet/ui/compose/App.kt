@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
+import pl.karol202.smartwallet.ui.compose.screens.accountedit.AccountEditScreen
 import pl.karol202.smartwallet.ui.compose.screens.accounts.AccountsScreen
 import pl.karol202.smartwallet.ui.compose.screens.categories.CategoriesScreen
 import pl.karol202.smartwallet.ui.compose.screens.categoryedit.CategoryEditScreen
@@ -125,11 +126,17 @@ private fun NavGraphBuilder.addScreen(scaffoldState: ScaffoldState,
 					scaffoldState = scaffoldState,
 					onRouteSelect = { onNavigateTopLevel(it.constructRoute()) },
 					onAccountCreate = {
-						//onNavigate(Routes.CategoryEdit.constructRoute())
+						onNavigate(Routes.AccountEdit.constructRoute())
 					},
 					onAccountEdit = { accountId ->
-						//onNavigate(Routes.CategoryEdit.constructRoute(categoryId))
+						onNavigate(Routes.AccountEdit.constructRoute(accountId))
 					}
+				)
+			Routes.AccountEdit ->
+				AccountEditScreen(
+					accountEditViewModel = getViewModel(),
+					accountId = navEntry.getStringArgument(Routes.AccountEdit.ARG_ACCOUNT_ID),
+					onNavigateBack = onNavigateBack
 				)
 		}
 	}

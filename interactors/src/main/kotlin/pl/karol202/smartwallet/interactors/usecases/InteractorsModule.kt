@@ -1,7 +1,7 @@
 package pl.karol202.smartwallet.interactors.usecases
 
 import org.koin.dsl.module
-import pl.karol202.smartwallet.interactors.usecases.account.getAccountsFlowUseCaseFactory
+import pl.karol202.smartwallet.interactors.usecases.account.*
 import pl.karol202.smartwallet.interactors.usecases.category.*
 import pl.karol202.smartwallet.interactors.usecases.init.initializeRepositoriesUseCaseFactory
 import pl.karol202.smartwallet.interactors.usecases.subcategory.*
@@ -31,4 +31,8 @@ fun interactorsModule() = module {
 	single { removeSubcategoryUseCaseFactory(get()) }
 
 	single { getAccountsFlowUseCaseFactory(get()) }
+	single { getAccountUseCaseFactory(get()) }
+	single { addAccountUseCaseFactory(get()) }
+	single { updateAccountUseCaseFactory(get()) }
+	single { removeAccountUseCaseFactory(get()) }
 }

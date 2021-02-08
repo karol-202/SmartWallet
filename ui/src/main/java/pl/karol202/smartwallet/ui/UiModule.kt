@@ -11,4 +11,5 @@ fun uiModule() = module {
 	viewModel { AndroidCategoryEditViewModel(get()) }
 	viewModel { AndroidSubcategoryEditViewModel(get()) }
 	viewModel { AndroidAccountsViewModel(get()) }
+	viewModel { AndroidAccountEditViewModel(get()) }
 }
