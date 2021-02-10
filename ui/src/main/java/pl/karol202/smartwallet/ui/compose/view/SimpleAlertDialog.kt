@@ -35,6 +35,7 @@ private data class SimpleAlertButtonsItem(val text: String,
 private class SimpleAlertButtonsScopeImpl(private val resToString: (Int) -> String) : SimpleAlertButtonsScope
 {
 	var items = emptyList<SimpleAlertButtonsItem>()
+		private set
 
 	override fun button(text: String, onClick: () -> Unit)
 	{

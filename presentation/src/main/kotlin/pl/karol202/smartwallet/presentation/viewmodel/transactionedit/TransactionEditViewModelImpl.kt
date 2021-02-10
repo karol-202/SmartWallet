@@ -1,8 +1,12 @@
 package pl.karol202.smartwallet.presentation.viewmodel.transactionedit
 
 import kotlinx.coroutines.flow.*
+import pl.karol202.smartwallet.domain.entity.Account
 import pl.karol202.smartwallet.domain.entity.Category
+import pl.karol202.smartwallet.domain.entity.Existing
 import pl.karol202.smartwallet.domain.entity.Transaction
+import pl.karol202.smartwallet.interactors.usecases.account.GetAccountsFlowUseCase
+import pl.karol202.smartwallet.interactors.usecases.account.GetDefaultAccountUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.CategoryWithSubcategories
 import pl.karol202.smartwallet.interactors.usecases.category.GetCategoriesWithSubcategoriesFlowUseCase
 import pl.karol202.smartwallet.interactors.usecases.category.filterByTransactionType
@@ -20,7 +24,9 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
                                    private val updateTransactionUseCase: UpdateTransactionUseCase,
                                    private val removeTransactionUseCase: RemoveTransactionUseCase,
                                    getCategoriesWithSubcategoriesFlowUseCase: GetCategoriesWithSubcategoriesFlowUseCase,
-                                   private val getOthersSubcategoryUseCase: GetOthersSubcategoryUseCase) :
+                                   private val getOthersSubcategoryUseCase: GetOthersSubcategoryUseCase,
+                                   private val getDefaultAccountUseCase: GetDefaultAccountUseCase,
+                                   getAccountsFlowUseCase: GetAccountsFlowUseCase) :
 		BaseViewModel(), TransactionEditViewModel
 {
 	sealed class EditState
@@ -63,11 +69,13 @@ class TransactionEditViewModelImpl(private val getTransactionUseCase: GetTransac
 				}
 			}
 			.map { it.map(CategoryWithSubcategories::toItemViewData) }
+	override val availableAccounts = getAccountsFlowUseCase().map { it.map(Account<Existing>::toItemViewData) }
 	override val finishEvent = MutableSharedFlow<Unit>()
 
 	override fun editNewTransaction() = launch {
 		val subcategoryId = getOthersSubcategoryUseCase(Category.Type.EXPENSE).id.value
-		editState.value = EditState.New(TransactionEditViewData.Expense(subcategoryId, LocalDate.now(), 0.0))
+		val accountId = getDefaultAccountUseCase()?.id?.value ?: error("Default account does not exist")
+		editState.value = EditState.New(TransactionEditViewData.Expense(subcategoryId, LocalDate.now(), accountId, 0.0))
 	}
 
 	override fun editExistingTransaction(transactionId: String) = launch {

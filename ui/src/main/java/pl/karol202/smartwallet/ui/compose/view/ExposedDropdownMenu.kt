@@ -66,7 +66,7 @@ private fun BoxScope.ExposedDropdownMenuEnabled(selectedValue: String,
 		onDismissRequest = { isOpen = false },
 		dropdownContent = {
 			DropdownContent(
-				onDrawerClose = { isOpen = false },
+				onDropdownClose = { isOpen = false },
 				content = content
 			)
 		}
@@ -131,7 +131,7 @@ private fun DropdownTextField(selectedValue: String,
 }
 
 @Composable
-private fun DropdownContent(onDrawerClose: () -> Unit,
+private fun DropdownContent(onDropdownClose: () -> Unit,
                             content: ExposedDropdownScope.() -> Unit)
 {
 	val scope = ExposedDropdownScopeImpl().also(content)
@@ -141,7 +141,7 @@ private fun DropdownContent(onDrawerClose: () -> Unit,
 			is ExposedDropdownItem.Standard -> DropdownMenuItem(
 				enabled = it.enabled,
 				onClick = {
-					it.onClick(onDrawerClose)
+					it.onClick(onDropdownClose)
 				},
 				content = it.content
 			)
@@ -152,7 +152,7 @@ private fun DropdownContent(onDrawerClose: () -> Unit,
 
 interface ExposedDropdownScope
 {
-	fun item(enabled: Boolean = true, onClick: (closeDrawer: () -> Unit) -> Unit = {}, content: @Composable () -> Unit)
+	fun item(enabled: Boolean = true, onClick: (closeDropdown: () -> Unit) -> Unit = {}, content: @Composable () -> Unit)
 
 	fun custom(content: @Composable () -> Unit)
 }
@@ -171,7 +171,7 @@ private class ExposedDropdownScopeImpl : ExposedDropdownScope
 	var items = emptyList<ExposedDropdownItem>()
 		private set
 
-	override fun item(enabled: Boolean, onClick: (closeDrawer: () -> Unit) -> Unit, content: @Composable () -> Unit)
+	override fun item(enabled: Boolean, onClick: (closeDropdown: () -> Unit) -> Unit, content: @Composable () -> Unit)
 	{
 		items = items + ExposedDropdownItem.Standard(enabled, onClick, content)
 	}

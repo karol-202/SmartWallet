@@ -1,22 +1,42 @@
 package pl.karol202.smartwallet.presentation.viewdata
 
-import pl.karol202.smartwallet.domain.entity.Category
-import pl.karol202.smartwallet.domain.entity.Existing
-import pl.karol202.smartwallet.domain.entity.Subcategory
 import pl.karol202.smartwallet.domain.entity.Transaction
+import pl.karol202.smartwallet.interactors.usecases.transaction.TransactionWithAllData
 import java.time.LocalDate
 
-data class TransactionItemViewData(val id: String,
-                                   val type: TransactionTypeViewData,
-                                   val category: CategoryItemViewData,
-                                   val subcategory: SubcategoryItemViewData,
-                                   val date: LocalDate,
-                                   val amount: Double)
-
-fun Transaction<Existing>.toItemViewData(category: Category<Existing>, subcategory: Subcategory<Existing>) = when(this)
+sealed class TransactionItemViewData
 {
-	is Transaction.Expense -> TransactionItemViewData(id.value, TransactionTypeViewData.EXPENSE,
-	                                                  category.toItemViewData(), subcategory.toItemViewData(), date, amount)
-	is Transaction.Income -> TransactionItemViewData(id.value, TransactionTypeViewData.INCOME,
-	                                                 category.toItemViewData(), subcategory.toItemViewData(), date, amount)
+	data class Expense(override val id: String,
+	                   override val type: TransactionTypeViewData,
+	                   override val category: CategoryItemViewData,
+	                   override val subcategory: SubcategoryItemViewData,
+	                   override val date: LocalDate,
+	                   val account: AccountItemViewData,
+	                   val amount: Double) : TransactionItemViewData()
+
+	data class Income(override val id: String,
+	                  override val type: TransactionTypeViewData,
+	                  override val category: CategoryItemViewData,
+	                  override val subcategory: SubcategoryItemViewData,
+	                  override val date: LocalDate,
+	                  val account: AccountItemViewData,
+	                  val amount: Double) : TransactionItemViewData()
+
+	abstract val id: String
+	abstract val type: TransactionTypeViewData
+	abstract val category: CategoryItemViewData
+	abstract val subcategory: SubcategoryItemViewData
+	abstract val date: LocalDate
+}
+
+fun TransactionWithAllData.toItemViewData() = with(transaction) {
+	when(this)
+	{
+		is Transaction.Expense -> TransactionItemViewData.Expense(id.value, TransactionTypeViewData.EXPENSE,
+		                                                          category.toItemViewData(), subcategory.toItemViewData(),
+		                                                          date, account.toItemViewData(), amount)
+		is Transaction.Income -> TransactionItemViewData.Income(id.value, TransactionTypeViewData.INCOME,
+		                                                        category.toItemViewData(), subcategory.toItemViewData(),
+		                                                        date, account.toItemViewData(), amount)
+	}
 }

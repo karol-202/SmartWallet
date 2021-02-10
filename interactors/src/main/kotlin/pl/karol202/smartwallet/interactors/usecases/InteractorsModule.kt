@@ -10,7 +10,7 @@ import pl.karol202.smartwallet.interactors.usecases.transaction.*
 fun interactorsModule() = module {
 	single { initializeRepositoriesUseCaseFactory(get(), get()) }
 
-	single { getTransactionsWithCategoriesFlowUseCaseFactory(get(), get()) }
+	single { getTransactionsWithCategoriesFlowUseCaseFactory(get(), get(), get()) }
 	single { getTransactionUseCaseFactory(get()) }
 	single { addTransactionUseCaseFactory(get()) }
 	single { updateTransactionUseCaseFactory(get()) }
@@ -32,6 +32,7 @@ fun interactorsModule() = module {
 
 	single { getAccountsFlowUseCaseFactory(get()) }
 	single { getAccountUseCaseFactory(get()) }
+	single { getDefaultAccountUseCaseFactory(get()) }
 	single { addAccountUseCaseFactory(get()) }
 	single { updateAccountUseCaseFactory(get()) }
 	single { removeAccountUseCaseFactory(get()) }

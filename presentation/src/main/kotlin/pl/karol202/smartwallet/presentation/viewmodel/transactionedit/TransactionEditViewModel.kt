@@ -1,7 +1,7 @@
 package pl.karol202.smartwallet.presentation.viewmodel.transactionedit
 
 import kotlinx.coroutines.flow.Flow
-import pl.karol202.smartwallet.presentation.viewdata.CategoryItemViewData
+import pl.karol202.smartwallet.presentation.viewdata.AccountItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.CategoryWithSubcategoriesItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
@@ -11,6 +11,7 @@ interface TransactionEditViewModel : ViewModel
 {
 	val editedTransaction: Flow<TransactionEditViewData?>
 	val availableCategories: Flow<List<CategoryWithSubcategoriesItemViewData>>
+	val availableAccounts: Flow<List<AccountItemViewData>>
 	val finishEvent: Flow<Unit>
 
 	fun editNewTransaction()

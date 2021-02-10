@@ -13,9 +13,11 @@ import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.datepicker
 import kotlinx.coroutines.flow.collect
+import pl.karol202.smartwallet.presentation.viewdata.AccountItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.CategoryWithSubcategoriesItemViewData
 import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData
-import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.*
+import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.Expense
+import pl.karol202.smartwallet.presentation.viewdata.TransactionEditViewData.Income
 import pl.karol202.smartwallet.presentation.viewdata.TransactionTypeViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.theme.AppColors
@@ -42,6 +44,7 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 	}
 
 	val availableCategories by transactionEditViewModel.availableCategories.collectAsState(emptyList())
+	val availableAccounts by transactionEditViewModel.availableAccounts.collectAsState(emptyList())
 	val editedTransaction = transactionEditViewModel.editedTransaction.collectAsState(null).value ?: return
 
 	var removeDialogVisible by remember { mutableStateOf(false) }
@@ -70,7 +73,8 @@ fun TransactionEditScreen(transactionEditViewModel: AndroidTransactionEditViewMo
 				transaction = editedTransaction,
 				setTransactionType = { transactionEditViewModel.setTransactionType(it) },
 				setTransaction = { transactionEditViewModel.setTransaction(it) },
-				categories = availableCategories
+				categories = availableCategories,
+				accounts = availableAccounts
 			)
 		},
 	)
@@ -122,7 +126,8 @@ fun TransactionEditScreenAppbar(transactionExists: Boolean,
 private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
                                          setTransactionType: (TransactionTypeViewData) -> Unit,
                                          setTransaction: (TransactionEditViewData) -> Unit,
-                                         categories: List<CategoryWithSubcategoriesItemViewData>)
+                                         categories: List<CategoryWithSubcategoriesItemViewData>,
+                                         accounts: List<AccountItemViewData>)
 {
 	Column {
 		TransactionTypeSelector(
@@ -134,12 +139,14 @@ private fun TransactionEditScreenContent(transaction: TransactionEditViewData,
 			is Expense -> TransactionDetailsExpense(
 				transaction = transaction,
 				setTransaction = setTransaction,
-				categories = categories
+				categories = categories,
+				accounts = accounts
 			)
 			is Income -> TransactionDetailsIncome(
 				transaction = transaction,
 				setTransaction = setTransaction,
-				categories = categories
+				categories = categories,
+				accounts = accounts
 			)
 		}
 	}
@@ -180,7 +187,8 @@ private fun TransactionTypeSelector(transaction: TransactionEditViewData,
 @Composable
 private fun TransactionDetailsExpense(transaction: Expense,
                                       setTransaction: (TransactionEditViewData) -> Unit,
-                                      categories: List<CategoryWithSubcategoriesItemViewData>)
+                                      categories: List<CategoryWithSubcategoriesItemViewData>,
+                                      accounts: List<AccountItemViewData>)
 {
 	TransactionAmount(
 		initialValue = transaction.amount,
@@ -191,6 +199,11 @@ private fun TransactionDetailsExpense(transaction: Expense,
 		categories = categories,
 		subcategoryId = transaction.subcategoryId,
 		setSubcategoryId = { setTransaction(transaction.withSubcategoryId(it)) }
+	)
+	TransactionAccount(
+		accounts = accounts,
+		accountId = transaction.accountId,
+		setAccountId = { setTransaction(transaction.withAccountId(it)) }
 	)
 	TransactionDate(
 		date = transaction.date,
@@ -201,7 +214,8 @@ private fun TransactionDetailsExpense(transaction: Expense,
 @Composable
 private fun TransactionDetailsIncome(transaction: Income,
                                      setTransaction: (TransactionEditViewData) -> Unit,
-                                     categories: List<CategoryWithSubcategoriesItemViewData>)
+                                     categories: List<CategoryWithSubcategoriesItemViewData>,
+                                     accounts: List<AccountItemViewData>)
 {
 	TransactionAmount(
 		initialValue = transaction.amount,
@@ -212,6 +226,11 @@ private fun TransactionDetailsIncome(transaction: Income,
 		categories = categories,
 		subcategoryId = transaction.subcategoryId,
 		setSubcategoryId = { setTransaction(transaction.withSubcategoryId(it)) }
+	)
+	TransactionAccount(
+		accounts = accounts,
+		accountId = transaction.accountId,
+		setAccountId = { setTransaction(transaction.withAccountId(it)) }
 	)
 	TransactionDate(
 		date = transaction.date,
@@ -281,6 +300,34 @@ private fun TransactionSubcategory(categories: List<CategoryWithSubcategoriesIte
 						}
 					)
 				}
+			}
+		}
+	)
+}
+
+@Composable
+private fun TransactionAccount(accounts: List<AccountItemViewData>,
+                               accountId: String,
+                               setAccountId: (String) -> Unit)
+{
+	ExposedDropdownMenu(
+		selectedValue = accounts.find { it.id == accountId }?.name ?: "",
+		modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+		textFieldModifier = Modifier.fillMaxWidth(),
+		label = {
+			Text(text = stringResource(R.string.text_transaction_edit_account))
+		},
+		content = {
+			accounts.forEach { account ->
+				item(
+					onClick = { closeDropdown ->
+						setAccountId(account.id)
+						closeDropdown()
+					},
+					content = {
+						Text(text = account.name)
+					}
+				)
 			}
 		}
 	)
