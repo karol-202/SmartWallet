@@ -31,8 +31,10 @@ fun interactorsModule() = module {
 	single { removeSubcategoryUseCaseFactory(get(), get(), get()) }
 
 	single { getAccountsFlowUseCaseFactory(get()) }
+	single { getAccountsWithDefaultFlowUseCaseFactory(get()) }
 	single { getAccountUseCaseFactory(get()) }
 	single { getDefaultAccountUseCaseFactory(get()) }
+	single { markAccountAsDefaultUseCaseFactory(get()) }
 	single { addAccountUseCaseFactory(get()) }
 	single { updateAccountUseCaseFactory(get()) }
 	single { removeAccountUseCaseFactory(get(), get()) }

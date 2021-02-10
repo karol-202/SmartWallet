@@ -7,6 +7,7 @@ object Versions
 	const val ANDROID_COMPOSE = "1.0.0-alpha10"
 	const val ANDROID_NAVIGATION_COMPOSE = "1.0.0-alpha05"
 	const val ANDROID_ROOM = "2.2.6"
+	const val ANDROID_PREFERENCE = "1.1.1"
 
 	const val CORE_LIBRARY_DESUGARING = "1.0.9"
 

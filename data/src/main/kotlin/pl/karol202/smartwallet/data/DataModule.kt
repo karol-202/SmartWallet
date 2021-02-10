@@ -14,5 +14,5 @@ fun dataModule() = module {
 	single<TransactionRepository> { LocalTransactionRepository(get(), get()) }
 	single<CategoryRepository> { LocalCategoryRepository(get(), get(), get()) }
 	single<SubcategoryRepository> { LocalSubcategoryRepository(get(), get(), get(), get()) }
-	single<AccountRepository> { LocalAccountRepository(get(), get()) }
+	single<AccountRepository> { LocalAccountRepository(get(), get(), get()) }
 }

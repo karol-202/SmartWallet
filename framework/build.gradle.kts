@@ -39,6 +39,8 @@ dependencies {
     implementation(Deps.ANDROID_ROOM_KTX)
     kapt(Deps.ANDROID_ROOM_COMPILER)
 
+    implementation(Deps.ANDROID_PREFERENCE)
+
     implementation(Deps.KOIN_VIEWMODEL)
 
     coreLibraryDesugaring(Deps.CORE_LIBRARY_DESUGARING)

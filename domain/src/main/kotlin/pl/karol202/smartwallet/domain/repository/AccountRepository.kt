@@ -8,8 +8,11 @@ import pl.karol202.smartwallet.domain.entity.New
 interface AccountRepository
 {
 	val allAccounts: Flow<List<Account<Existing>>>
+	val defaultAccount: Flow<Account<Existing>?>
 
 	fun getAccount(accountId: String): Flow<Account<Existing>?>
+
+	suspend fun markAccountAsDefault(accountId: String)
 
 	suspend fun addAccount(account: Account<New>)
 

@@ -7,6 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import pl.karol202.smartwallet.presentation.viewdata.AccountItemViewData
+import pl.karol202.smartwallet.presentation.viewdata.AccountWithDefaultItemViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.Route
 import pl.karol202.smartwallet.ui.compose.drawer.DrawerContent
@@ -62,51 +64,62 @@ fun AccountsScreen(accountsViewModel: AndroidAccountsViewModel,
 		bodyContent = {
 			AccountsScreenContent(
 				accounts = allAccounts,
-				onAccountEdit = onAccountEdit
+				onAccountEdit = onAccountEdit,
+				onAccountDefaultSet = { accountsViewModel.markAccountAsDefault(it) }
 			)
 		},
 	)
 }
 
 @Composable
-private fun AccountsScreenContent(accounts: List<AccountItemViewData>,
-                                  onAccountEdit: (String) -> Unit)
+private fun AccountsScreenContent(accounts: List<AccountWithDefaultItemViewData>,
+                                  onAccountEdit: (String) -> Unit,
+                                  onAccountDefaultSet: (String) -> Unit)
 {
 	AccountsList(
 		accounts = accounts,
 		onAccountEdit = onAccountEdit,
+		onAccountDefaultSet = onAccountDefaultSet
 	)
 }
 
 @Composable
-private fun AccountsList(accounts: List<AccountItemViewData>,
-                         onAccountEdit: (String) -> Unit)
+private fun AccountsList(accounts: List<AccountWithDefaultItemViewData>,
+                         onAccountEdit: (String) -> Unit,
+                         onAccountDefaultSet: (String) -> Unit)
 {
 	LazyColumn {
 		items(items = accounts) { account ->
 			AccountItem(
 				account = account,
-				onAccountEdit = { onAccountEdit(account.id) }
+				onAccountEdit = { onAccountEdit(account.id) },
+				onAccountDefaultSet = { onAccountDefaultSet(account.id) }
 			)
 		}
 	}
 }
 
 @Composable
-private fun AccountItem(account: AccountItemViewData,
-                        onAccountEdit: () -> Unit)
+private fun AccountItem(account: AccountWithDefaultItemViewData,
+                        onAccountEdit: () -> Unit,
+                        onAccountDefaultSet: () -> Unit)
 {
-	Column {
-		Row(
-			modifier = Modifier
-					.fillMaxWidth()
-					.preferredHeight(48.dp)
-					.clickable(onClick = onAccountEdit)
-					.padding(start = 24.dp),
-			verticalAlignment = Alignment.CenterVertically,
-			content = {
-				Text(text = account.name)
-			}
-		)
-	}
+	Row(
+		modifier = Modifier
+				.fillMaxWidth()
+				.preferredHeight(48.dp)
+				.clickable(onClick = onAccountEdit)
+				.padding(start = 24.dp),
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.SpaceBetween,
+		content = {
+			Text(text = account.name)
+			IconButton(
+				onClick = onAccountDefaultSet,
+				content = {
+					Icon(if(account.isDefault) Icons.Default.Star else Icons.Default.StarOutline)
+				}
+			)
+		}
+	)
 }

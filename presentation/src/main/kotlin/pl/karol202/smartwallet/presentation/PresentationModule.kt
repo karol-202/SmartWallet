@@ -22,6 +22,6 @@ fun presentationModule() = module {
 	factory<CategoriesViewModel> { CategoriesViewModelImpl(get()) }
 	factory<CategoryEditViewModel> { CategoryEditViewModelImpl(get(), get(), get(), get(), get()) }
 	factory<SubcategoryEditViewModel> { SubcategoryEditViewModelImpl(get(), get(), get(), get(), get(), get()) }
-	factory<AccountsViewModel> { AccountsViewModelImpl(get()) }
+	factory<AccountsViewModel> { AccountsViewModelImpl(get(), get()) }
 	factory<AccountEditViewModel> { AccountEditViewModelImpl(get(), get(), get(), get()) }
 }

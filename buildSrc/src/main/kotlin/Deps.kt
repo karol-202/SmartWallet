@@ -14,6 +14,8 @@ object Deps
 	const val ANDROID_ROOM_KTX = "androidx.room:room-ktx:${Versions.ANDROID_ROOM}"
 	const val ANDROID_ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ANDROID_ROOM}"
 
+	const val ANDROID_PREFERENCE = "androidx.preference:preference-ktx:${Versions.ANDROID_PREFERENCE}"
+
 	const val CORE_LIBRARY_DESUGARING = "com.android.tools:desugar_jdk_libs:${Versions.CORE_LIBRARY_DESUGARING}"
 
 	const val KOIN_CORE = "org.koin:koin-core:${Versions.KOIN}"
