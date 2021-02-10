@@ -16,4 +16,8 @@ interface TransactionDataSource
     suspend fun removeTransaction(transactionId: String)
 
     suspend fun moveTransactionsBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String)
+
+    suspend fun removeTransactionsOfSubcategory(subcategoryId: String)
+
+    suspend fun removeTransactionsOfAccount(accountId: String)
 }

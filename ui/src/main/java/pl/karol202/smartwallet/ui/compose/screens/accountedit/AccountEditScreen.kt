@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.collect
 import pl.karol202.smartwallet.presentation.viewdata.AccountEditViewData
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
+import pl.karol202.smartwallet.ui.compose.view.SimpleAlertButtonsOrientation
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidAccountEditViewModel
 
@@ -132,9 +133,10 @@ private fun AccountRemoveDialog(accountName: String,
 {
 	SimpleAlertDialog(
 		title = stringResource(R.string.dialog_account_remove_title, accountName),
-		confirmText = stringResource(R.string.text_dialog_remove),
-		dismissText = stringResource(R.string.text_dialog_cancel),
-		onConfirm = onConfirm,
-		onDismiss = onDismiss
+		buttonsOrientation = SimpleAlertButtonsOrientation.VERTICAL,
+		buttons = {
+			button(R.string.text_account_remove_dialog_remove, onConfirm)
+			dismissButton(R.string.text_dialog_cancel, onDismiss)
+		}
 	)
 }

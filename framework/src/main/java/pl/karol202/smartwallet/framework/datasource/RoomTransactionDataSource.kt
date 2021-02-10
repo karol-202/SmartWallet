@@ -26,4 +26,10 @@ class RoomTransactionDataSource(private val transactionsDao: TransactionDao) : T
 
 	override suspend fun moveTransactionsBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String) =
 			transactionsDao.moveBetweenSubcategories(sourceSubcategoryId, destinationSubcategoryId)
+
+	override suspend fun removeTransactionsOfSubcategory(subcategoryId: String) =
+			transactionsDao.deleteBySubcategory(subcategoryId)
+
+	override suspend fun removeTransactionsOfAccount(accountId: String) =
+			transactionsDao.deleteByAccount(accountId)
 }

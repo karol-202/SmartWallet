@@ -35,5 +35,5 @@ fun interactorsModule() = module {
 	single { getDefaultAccountUseCaseFactory(get()) }
 	single { addAccountUseCaseFactory(get()) }
 	single { updateAccountUseCaseFactory(get()) }
-	single { removeAccountUseCaseFactory(get()) }
+	single { removeAccountUseCaseFactory(get(), get()) }
 }

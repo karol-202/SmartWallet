@@ -24,7 +24,7 @@ fun removeSubcategoryUseCaseFactory(categoryRepository: CategoryRepository,
 		TransactionsPolicy.MOVE_TO_OTHERS ->
 			moveTransactionsToOthers(categoryRepository, subcategoryRepository, transactionRepository, id)
 		TransactionsPolicy.REMOVE ->
-			Unit /* Expected to be fulfilled by database (CASCADE) */
+			transactionRepository.removeTransactionsOfSubcategory(id)
 	}
 	subcategoryRepository.removeSubcategory(id)
 }

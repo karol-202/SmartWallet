@@ -18,7 +18,7 @@ import pl.karol202.smartwallet.framework.room.entity.SubcategoryRoomEntity
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity
 
 private const val DATABASE_NAME = "smartwallet.local"
-private const val DATABASE_VERSION = 7
+private const val DATABASE_VERSION = 8
 
 @Database(
 	entities = [

@@ -2,6 +2,7 @@ package pl.karol202.smartwallet.framework.room.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import pl.karol202.smartwallet.data.model.TransactionModel
 import pl.karol202.smartwallet.framework.room.entity.TransactionRoomEntity.Type
@@ -12,12 +13,17 @@ import java.time.LocalDate
 	        ForeignKey(entity = SubcategoryRoomEntity::class,
 	                   parentColumns = ["id"],
 	                   childColumns = ["subcategoryId"],
-	                   onDelete = ForeignKey.CASCADE),
+	                   onDelete = ForeignKey.RESTRICT),
 	        ForeignKey(entity = AccountRoomEntity::class,
 	                   parentColumns = ["id"],
 	                   childColumns = ["accountId"],
-	                   onDelete = ForeignKey.CASCADE)
-        ])
+	                   onDelete = ForeignKey.RESTRICT)
+        ],
+        indices = [
+        	Index("subcategoryId"),
+	        Index("accountId")
+        ]
+)
 data class TransactionRoomEntity(@PrimaryKey val id: String,
                                  val type: Type,
                                  val subcategoryId: String,

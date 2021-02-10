@@ -22,6 +22,12 @@ interface TransactionDao
 	@Query("UPDATE transactions SET subcategoryId = :destinationSubcategoryId WHERE subcategoryId = :sourceSubcategoryId")
 	suspend fun moveBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String)
 
+	@Query("DELETE FROM transactions WHERE subcategoryId = :subcategoryId")
+	suspend fun deleteBySubcategory(subcategoryId: String)
+
+	@Query("DELETE FROM transactions WHERE accountId = :accountId")
+	suspend fun deleteByAccount(accountId: String)
+
 	@Query("SELECT * FROM transactions")
 	fun getAll(): Flow<List<TransactionRoomEntity>>
 

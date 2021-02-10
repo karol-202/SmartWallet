@@ -31,4 +31,10 @@ class LocalTransactionRepository(private val transactionDataSource: TransactionD
 
 	override suspend fun moveTransactionsBetweenSubcategories(sourceSubcategoryId: String, destinationSubcategoryId: String) =
 			transactionDataSource.moveTransactionsBetweenSubcategories(sourceSubcategoryId, destinationSubcategoryId)
+
+	override suspend fun removeTransactionsOfSubcategory(subcategoryId: String) =
+			transactionDataSource.removeTransactionsOfSubcategory(subcategoryId)
+
+	override suspend fun removeTransactionsOfAccount(accountId: String) =
+			transactionDataSource.removeTransactionsOfAccount(accountId)
 }
