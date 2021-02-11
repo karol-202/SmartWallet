@@ -37,6 +37,8 @@
     <string name="text_subcategory_edit_name">Name</string>
     <string name="text_subcategory_edit_category">Category</string>
     <string name="text_account_edit_name">Name</string>
+    <string name="text_account_edit_mark_default">Mark as default</string>
+    <string name="text_account_edit_marked_default">Marked as default</string>
     <string name="text_account_remove_dialog_remove">Remove with all transactions</string>
     <string name="text_dialog_ok">OK</string>
     <string name="text_dialog_remove">Remove</string>

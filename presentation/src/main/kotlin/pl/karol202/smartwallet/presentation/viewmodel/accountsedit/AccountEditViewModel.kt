@@ -23,6 +23,8 @@ interface AccountEditViewModel : ViewModel
 
 	fun setAccount(account: AccountEditViewData)
 
+	fun markAccountAsDefault()
+
 	fun apply()
 
 	fun removeAccount()

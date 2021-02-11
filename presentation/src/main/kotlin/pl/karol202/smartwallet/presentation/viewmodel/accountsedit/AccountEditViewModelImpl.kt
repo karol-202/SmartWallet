@@ -10,7 +10,8 @@ class AccountEditViewModelImpl(private val getAccountUseCase: GetAccountUseCase,
                                private val addAccountUseCase: AddAccountUseCase,
                                private val updateAccountUseCase: UpdateAccountUseCase,
                                private val removeAccountUseCase: RemoveAccountUseCase,
-                               isAccountDefaultFlowUseCase: IsAccountDefaultFlowUseCase) :
+                               isAccountDefaultFlowUseCase: IsAccountDefaultFlowUseCase,
+                               private val markAccountAsDefaultUseCase: MarkAccountAsDefaultUseCase) :
 		BaseViewModel(), AccountEditViewModel
 {
 	sealed class EditState
@@ -61,6 +62,10 @@ class AccountEditViewModelImpl(private val getAccountUseCase: GetAccountUseCase,
 	override fun setAccount(account: AccountEditViewData)
 	{
 		editState.value = editState.value.withAccount(account)
+	}
+
+	override fun markAccountAsDefault() = launch {
+		markAccountAsDefaultUseCase(editState.value.id ?: return@launch)
 	}
 
 	override fun apply() = launch {

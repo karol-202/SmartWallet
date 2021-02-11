@@ -2,7 +2,10 @@ package pl.karol202.smartwallet.ui.compose.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSizeConstraints
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
@@ -10,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import pl.karol202.smartwallet.ui.compose.view.ToggleButtonPosition.*
@@ -41,7 +43,7 @@ fun ToggleButtonGroup(modifier: Modifier = Modifier,
 	}
 }
 
-enum class ToggleButtonPosition
+private enum class ToggleButtonPosition
 {
 	FIRST, MIDDLE, LAST
 }

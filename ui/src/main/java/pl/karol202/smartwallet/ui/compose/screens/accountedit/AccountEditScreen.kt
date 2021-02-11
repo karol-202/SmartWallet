@@ -1,13 +1,9 @@
 package pl.karol202.smartwallet.ui.compose.screens.accountedit
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,6 +13,7 @@ import pl.karol202.smartwallet.presentation.viewdata.AccountEditViewData
 import pl.karol202.smartwallet.presentation.viewmodel.accountsedit.AccountEditViewModel.RemovalCapability
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
+import pl.karol202.smartwallet.ui.compose.view.OutlinedToggleButton
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertButtonsOrientation
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertDialog
 import pl.karol202.smartwallet.ui.viewmodel.AndroidAccountEditViewModel
@@ -35,6 +32,7 @@ fun AccountEditScreen(accountEditViewModel: AndroidAccountEditViewModel,
 	}
 
 	val editedAccount = accountEditViewModel.editedAccount.collectAsState(null).value ?: return
+	val isDefault by accountEditViewModel.isDefault.collectAsState(false)
 	val removalCapability by accountEditViewModel.removalCapability.collectAsState(RemovalCapability.REMOVABLE)
 
 	var removalDialogVisible by remember { mutableStateOf(false) }
@@ -64,7 +62,9 @@ fun AccountEditScreen(accountEditViewModel: AndroidAccountEditViewModel,
 		bodyContent = {
 			AccountEditScreenContent(
 				account = editedAccount,
-				setAccount = { accountEditViewModel.setAccount(it) }
+				isDefault = isDefault,
+				setAccount = { accountEditViewModel.setAccount(it) },
+				markDefault = { accountEditViewModel.markAccountAsDefault() }
 			)
 		},
 	)
@@ -110,12 +110,18 @@ private fun AccountEditScreenAppbar(accountExists: Boolean,
 
 @Composable
 private fun AccountEditScreenContent(account: AccountEditViewData,
-                                     setAccount: (AccountEditViewData) -> Unit)
+                                     isDefault: Boolean,
+                                     setAccount: (AccountEditViewData) -> Unit,
+                                     markDefault: () -> Unit)
 {
 	Column {
 		AccountName(
 			name = account.name,
 			setName = { setAccount(account.withName(it)) }
+		)
+		AccountDefault(
+			isDefault = isDefault,
+			markDefault = markDefault
 		)
 	}
 }
@@ -132,6 +138,25 @@ private fun AccountName(name: String,
 				.padding(horizontal = 24.dp, vertical = 16.dp),
 		label = {
 			Text(text = stringResource(R.string.text_account_edit_name))
+		}
+	)
+}
+
+@Composable
+private fun AccountDefault(isDefault: Boolean,
+                           markDefault: () -> Unit)
+{
+	OutlinedToggleButton(
+		modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 24.dp),
+		checked = isDefault,
+		onClick = markDefault,
+		content = {
+			Icon(if(isDefault) Icons.Default.Star else Icons.Default.StarOutline)
+			Spacer(Modifier.width(8.dp))
+			Text(if(isDefault) stringResource(R.string.text_account_edit_marked_default)
+			     else stringResource(R.string.text_account_edit_mark_default))
 		}
 	)
 }
