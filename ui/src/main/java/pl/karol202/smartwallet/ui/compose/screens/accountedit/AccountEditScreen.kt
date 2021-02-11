@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collect
 import pl.karol202.smartwallet.presentation.viewdata.AccountEditViewData
+import pl.karol202.smartwallet.presentation.viewmodel.accountsedit.AccountEditViewModel.RemovalCapability
 import pl.karol202.smartwallet.ui.R
 import pl.karol202.smartwallet.ui.compose.view.AppBarIcon
 import pl.karol202.smartwallet.ui.compose.view.SimpleAlertButtonsOrientation
@@ -34,15 +35,20 @@ fun AccountEditScreen(accountEditViewModel: AndroidAccountEditViewModel,
 	}
 
 	val editedAccount = accountEditViewModel.editedAccount.collectAsState(null).value ?: return
+	val removalCapability by accountEditViewModel.removalCapability.collectAsState(RemovalCapability.REMOVABLE)
 
-	var removeDialogVisible by remember { mutableStateOf(false) }
+	var removalDialogVisible by remember { mutableStateOf(false) }
+	var removalImpossibleDialogVisible by remember { mutableStateOf(false) }
 
 	Scaffold(
 		topBar = {
 			AccountEditScreenAppbar(
 				accountExists = accountId != null,
 				onNavigateBack = onNavigateBack,
-				onRemove = { removeDialogVisible = true }
+				onRemove = {
+					if(removalCapability == RemovalCapability.REMOVABLE) removalDialogVisible = true
+					else removalImpossibleDialogVisible = true
+				}
 			)
 		},
 		floatingActionButton = {
@@ -63,10 +69,14 @@ fun AccountEditScreen(accountEditViewModel: AndroidAccountEditViewModel,
 		},
 	)
 
-	if(removeDialogVisible) AccountRemoveDialog(
+	if(removalDialogVisible) AccountRemovalDialog(
 		accountName = editedAccount.name,
 		onConfirm = { accountEditViewModel.removeAccount() },
-		onDismiss = { removeDialogVisible = false }
+		onDismiss = { removalDialogVisible = false }
+	)
+	if(removalImpossibleDialogVisible) AccountRemovalImpossibleDialog(
+		removalCapability = removalCapability,
+		onDismiss = { removalImpossibleDialogVisible = false }
 	)
 }
 
@@ -127,9 +137,9 @@ private fun AccountName(name: String,
 }
 
 @Composable
-private fun AccountRemoveDialog(accountName: String,
-                                onConfirm: () -> Unit,
-                                onDismiss: () -> Unit)
+private fun AccountRemovalDialog(accountName: String,
+                                 onConfirm: () -> Unit,
+                                 onDismiss: () -> Unit)
 {
 	SimpleAlertDialog(
 		title = stringResource(R.string.dialog_account_remove_title, accountName),
@@ -137,6 +147,23 @@ private fun AccountRemoveDialog(accountName: String,
 		buttons = {
 			button(R.string.text_account_remove_dialog_remove, onConfirm)
 			dismissButton(R.string.text_dialog_cancel, onDismiss)
+		}
+	)
+}
+
+@Composable
+private fun AccountRemovalImpossibleDialog(removalCapability: RemovalCapability,
+                                           onDismiss: () -> Unit)
+{
+	SimpleAlertDialog(
+		title = when(removalCapability)
+		{
+			RemovalCapability.DEFAULT_ACCOUNT ->
+				stringResource(R.string.dialog_account_remove_impossible_default_title)
+			RemovalCapability.REMOVABLE -> error("Invalid impossibility cause")
+		},
+		buttons = {
+			dismissButton(R.string.text_dialog_ok, onDismiss)
 		}
 	)
 }

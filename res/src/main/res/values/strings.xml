@@ -25,6 +25,7 @@
     <string name="dialog_account_remove_title">Do you want to remove account %s?
         All transactions related with this account will be removed
     </string>
+    <string name="dialog_account_remove_impossible_default_title">Cannot remove account marked as default</string>
 
     <string name="text_transaction_edit_amount">Amount</string>
     <string name="text_transaction_edit_subcategory">Subcategory</string>
@@ -37,6 +38,7 @@
     <string name="text_subcategory_edit_category">Category</string>
     <string name="text_account_edit_name">Name</string>
     <string name="text_account_remove_dialog_remove">Remove with all transactions</string>
+    <string name="text_dialog_ok">OK</string>
     <string name="text_dialog_remove">Remove</string>
     <string name="text_dialog_cancel">Cancel</string>
 

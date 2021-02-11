@@ -12,7 +12,7 @@ fun SharedPreferences.observeLong(key: String, default: Long) = observe(key, def
 fun SharedPreferences.observeFloat(key: String, default: Float) = observe(key, default, this::getFloat)
 fun SharedPreferences.observeBoolean(key: String, default: Boolean) = observe(key, default, this::getBoolean)
 
-fun <T> SharedPreferences.observe(key: String, default: T, getter: (String, T) -> T) = callbackFlow<T> {
+private fun <T> SharedPreferences.observe(key: String, default: T, getter: (String, T) -> T) = callbackFlow<T> {
 	channel.offer(getter(key, default))
 	val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, updatedKey ->
 		if(updatedKey == key) channel.offer(getter(key, default))

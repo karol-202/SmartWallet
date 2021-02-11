@@ -1,6 +1,7 @@
 package pl.karol202.smartwallet.data.repository
 
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import pl.karol202.smartwallet.data.datasource.AccountDataSource
 import pl.karol202.smartwallet.data.datasource.DefaultAccountDataSource
@@ -35,6 +36,9 @@ class LocalAccountRepository(private val accountDataSource: AccountDataSource,
 	override suspend fun updateAccount(account: Account<Existing>) =
 			accountDataSource.updateAccount(account.toModel())
 
-	override suspend fun removeAccount(accountId: String) =
-			accountDataSource.removeAccount(accountId)
+	override suspend fun removeAccount(accountId: String)
+	{
+		if(accountId == defaultAccountDataSource.defaultAccountId.first()) return
+		accountDataSource.removeAccount(accountId)
+	}
 }
